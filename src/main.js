@@ -15,13 +15,13 @@ const tripMainElement = pageHeader.querySelector('.trip-main__trip-info');
 const tripControlsElement = pageHeader.querySelector('.trip-controls__filters');
 const pageMain = document.querySelector('.page-body__page-main');
 const tripEventsSection = pageMain.querySelector('.trip-events');
-const tripList = tripEventsSection.querySelector('.trip-events__list');
 
 render(new NewAboutTripTemplate(), tripMainElement);
 render(new NewTripFiltersTemplateView(), tripControlsElement);
 render(new NewTripSortTemplateView(), tripEventsSection);
 render(new NewTripListTemplateView(), tripEventsSection);
 
+const tripList = tripEventsSection.querySelector('.trip-events__list');
 for (let i = 0; i < POIN_COUNT; i++) {
   render(new NewTripPointTemplateView(), tripList);
 }
