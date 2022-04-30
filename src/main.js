@@ -7,6 +7,7 @@ import NewTripListTemplateView from "./view/trip-list-view.js";
 import NewNewPointTemplateView from "./view/trip-new-point-view.js";
 import NewEditPointTemplateView from "./view/trip-edit-point-view.js";
 import NewTripPointTemplateView from "./view/trip-point-view.js";
+// import PointModel from "./model/point-model.js";
 
 const POIN_COUNT = 3;
 
@@ -15,6 +16,7 @@ const tripMainElement = pageHeader.querySelector('.trip-main__trip-info');
 const tripControlsElement = pageHeader.querySelector('.trip-controls__filters');
 const pageMain = document.querySelector('.page-body__page-main');
 const tripEventsSection = pageMain.querySelector('.trip-events');
+// const pointModel = new PointModel();
 
 render(new NewAboutTripTemplate(), tripMainElement);
 render(new NewTripFiltersTemplateView(), tripControlsElement);
