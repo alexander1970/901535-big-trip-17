@@ -1,4 +1,3 @@
-// eslint-disable-next-line quotes
 import { createElement } from "../render.js";
 
 const createTripSortTemplate = () => (

@@ -1,8 +1,7 @@
-// eslint-disable-next-line quotes
 import { generatePoint } from "../mock/point.js";
 
 export default class PointModel {
-  points = Array.from({length: 3}, generatePoint);
+  points = Array.from({length: 20}, generatePoint);
 
   getPoints = () => this.points;
 }
