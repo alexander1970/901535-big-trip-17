@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 
 const getRandomInt = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -7,11 +7,7 @@ const getRandomInt = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const humanizePointDueDate = (dueDate) => dayjs(dueDate).format('D MMMM');
-
-const getRandomElement = (arr) => {
-  return arr[Math.floor(Math.random() * arr.length)];
-};
+const getRandomElement = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 const shuffleArr = (arr) => {
   const newArr = arr.slice();
@@ -30,6 +26,10 @@ const getRandomArr = (arr) => {
   if (arr.length !== 0) {
     const count = getRandomInt(1, arr.length);
     const elements = shuffleArr(arr);
+
+    for (let i = 0; i < count; i++) {
+      randomArr.push(elements[i]);
+    }
   }
 
   return randomArr;
@@ -43,11 +43,28 @@ const capitalizeFirstLetter = (str) => {
   return str[0].toUpperCase() + str.slice(1);
 };
 
+const getTwoDigits = (number) => number.toString().length === 1 ? `0${number}` : `${number}`;
+
+const calcDuration = (begin, end) => {
+  const durationInMinutes = dayjs(end).diff(begin, 'minutes');
+  const durationInHours = Math.floor(durationInMinutes / 60);
+  const durationInDays = Math.floor(durationInHours / 24);
+
+  if (durationInMinutes < 60) {
+    return `${getTwoDigits(durationInMinutes)} M`;
+  } else if (durationInMinutes >= 60 && durationInMinutes < 1439) {
+    return `${getTwoDigits(durationInHours)} H ${getTwoDigits(+durationInMinutes - durationInHours * 60)} M`;
+  } else {
+    return `${getTwoDigits(durationInDays)} D ${getTwoDigits(+durationInHours - durationInDays * 24)} H
+            ${getTwoDigits(+durationInMinutes - durationInHours * 60)} M}`;
+  }
+};
+
 export {
   getRandomInt,
-  humanizePointDueDate,
   getRandomElement,
   getRandomArr,
   shuffleArr,
-  capitalizeFirstLetter
+  capitalizeFirstLetter,
+  calcDuration
 };

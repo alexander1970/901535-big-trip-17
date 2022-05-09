@@ -1,6 +1,6 @@
-import dayjs from "dayjs";
-import { getRandomElement, getRandomInt, shuffleArr } from "../utils.js";
-import { DESTINATIONS, OFFER_TITLES, TYPES } from "./consts.js";
+import dayjs from 'dayjs';
+import { getRandomElement, getRandomInt, shuffleArr } from '../utils.js';
+import { DESTINATIONS, OFFER_TITLES, TYPES } from './consts.js';
 
 const generateDateFrom = () => {
   const maxDayGap = 7;
@@ -9,9 +9,7 @@ const generateDateFrom = () => {
   return dayjs().add(gap, 'day').toDate();
 };
 
-const generateDateTo = (startTime) => {
-  return dayjs(startTime).add(getRandomInt(3, 9) * 10, 'minute').toDate();
-};
+const generateDateTo = (startTime) => dayjs(startTime).add(getRandomInt(3, 9) * 10, 'minute').toDate();
 
 const generateEventOffers = () => {
   const OFFERS_MIN_COUNT = 0;
@@ -21,12 +19,10 @@ const generateEventOffers = () => {
   const offerRandomTitles = shuffleArr(OFFER_TITLES).slice(0, count);
   const offers = [];
 
-  const createEventOffer = (randomTitle) => {
-    return {
-      title: randomTitle,
-      cost: getRandomInt(1, 10) * 10,
-    };
-  };
+  const createEventOffer = (randomTitle) => ({
+    title: randomTitle,
+    cost: getRandomInt(1, 10) * 10,
+  });
 
   offerRandomTitles.forEach((element) => {
     offers.push(createEventOffer(element));
@@ -46,5 +42,5 @@ export const generatePoint = () => {
     isFavorite: Boolean(getRandomInt()),
     offers: generateEventOffers(),
     type: getRandomElement(TYPES),
-  }
+  };
 };
