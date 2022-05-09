@@ -1,11 +1,10 @@
-// eslint-disable-next-line quotes
-import { createElement } from "../render.js";
+import { createElement } from '../render';
 
-const createTripListTemplate = () => '<ul class="trip-events__list"></ul>';
+const createListTemplate = () => '<ul class="trip-events__list"></ul>';
 
 export default class NewTripListTemplateView {
   getTemplate() {
-    return createTripListTemplate();
+    return createListTemplate();
   }
 
   getElement() {
