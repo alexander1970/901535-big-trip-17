@@ -172,19 +172,21 @@ const creatNewPointTemplate = () => (
 );
 
 export default class NewNewPointTemplateView {
-  getTemplate() {
+  #element;
+
+  get template() {
     return creatNewPointTemplate();
   }
 
   getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
