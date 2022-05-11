@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-// eslint-disable-next-line quotes
-import { createElement } from "../render.js";
-=======
 import { createElement } from '../render.js';
->>>>>>> 0ca6a087e7fbbb9fe9c5418b9c1b1522cacf3226
 
 const createTripSortTemplate = () => (
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
@@ -34,22 +29,6 @@ const createTripSortTemplate = () => (
   </form>`);
 
 export default class NewTripSortTemplateView {
-<<<<<<< HEAD
-  getTemplate() {
-    return createTripSortTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-=======
   #element;
 
   get template() {
@@ -66,6 +45,5 @@ export default class NewTripSortTemplateView {
 
   removeElement() {
     this.#element = null;
->>>>>>> 0ca6a087e7fbbb9fe9c5418b9c1b1522cacf3226
   }
 }

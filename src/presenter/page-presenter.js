@@ -37,13 +37,23 @@ export default class PagePresenter {
       this.#listComponent.replaceChild(pointComponent.element, pointEditComponent.element);
     };
 
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        replaceFormToCard();
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    };
+
     pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
       replaceCardToForm();
+      document.addEventListener('keydown', onEscKeyDown);
     });
 
     pointEditComponent.element.querySelector('form').addEventListener('submit', (evt) => {
       evt.preventDefault();
       replaceFormToCard();
+      document.removeEventListener('keydown', onEscKeyDown);
     });
 
     render(pointComponent, this.#listComponent);
