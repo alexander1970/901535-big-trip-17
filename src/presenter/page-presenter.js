@@ -1,4 +1,5 @@
 import { render } from '../render.js';
+import EventsEmpty from '../view/events-empty.js';
 import NewEditPointTemplateView from '../view/trip-edit-point-view.js';
 import NewTripListPointTemplateView from '../view/trip-list-point-view.js';
 import NewTripListTemplateView from '../view/trip-list-view.js';
@@ -20,8 +21,12 @@ export default class PagePresenter {
     render(new NewTripSortTemplateView(), this.#tripEvents);
     render(this.#pointListComponent, this.#tripEvents);
 
-    for (const element of this.#arrPoints) {
-      this.#renderPoint(element);
+    if (this.#arrPoints.length === 0) {
+      render(new EventsEmpty, this.#tripEvents);
+    } else {
+      for (const element of this.#arrPoints) {
+        this.#renderPoint(element);
+      }
     }
   };
 
@@ -48,6 +53,11 @@ export default class PagePresenter {
     pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
       replaceCardToForm();
       document.addEventListener('keydown', onEscKeyDown);
+    });
+
+    pointEditComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replaceFormToCard();
+      document.removeEventListener('keydown', onEscKeyDown);
     });
 
     pointEditComponent.element.querySelector('form').addEventListener('submit', (evt) => {
