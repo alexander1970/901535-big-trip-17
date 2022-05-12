@@ -18,12 +18,12 @@ export default class PagePresenter {
     this.#pointModel = pointModel;
     this.#arrPoints = [...this.#pointModel.points];
 
-    render(new NewTripSortTemplateView(), this.#tripEvents);
-    render(this.#pointListComponent, this.#tripEvents);
-
     if (this.#arrPoints.length === 0) {
       render(new EventsEmpty, this.#tripEvents);
     } else {
+      render(new NewTripSortTemplateView(), this.#tripEvents);
+      render(this.#pointListComponent, this.#tripEvents);
+
       for (const element of this.#arrPoints) {
         this.#renderPoint(element);
       }
