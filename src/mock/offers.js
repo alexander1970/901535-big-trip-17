@@ -11,6 +11,8 @@ const getOfferTemplate = (offer) => {
 };
 
 export const generateOffers = (offers) => {
+  // const offersList = offers.reduce(getOfferTemplate(offers));
+
   let offersList = '';
 
   offers.forEach((element) => {
