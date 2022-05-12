@@ -11,11 +11,10 @@ const getOfferTemplate = (offer) => {
 };
 
 export const generateOffers = (offers) => {
-  let offersList = '';
-
-  offers.forEach((element) => {
-    offersList = offersList.concat(getOfferTemplate(element));
-  });
+  const offersList = offers.reduce((acc, element) => {
+    acc += getOfferTemplate(element);
+    return  acc;
+  }, '');
 
   return `
     <ul class="event__selected-offers">
