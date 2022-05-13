@@ -1,5 +1,4 @@
-// eslint-disable-next-line quotes
-import { createElement } from "../render.js";
+import { createElement } from '../render.js';
 
 const createTripFiltersTemplate = () => (
   `<form class="trip-filters" action="#" method="get">
@@ -22,19 +21,21 @@ const createTripFiltersTemplate = () => (
   </form>`);
 
 export default class NewTripFiltersTemplateView {
-  getTemplate() {
+  #element;
+
+  get template() {
     return createTripFiltersTemplate();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

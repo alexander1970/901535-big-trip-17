@@ -2,19 +2,19 @@ import dayjs from 'dayjs';
 import { getRandomElement, getRandomInt, shuffleArr } from '../utils.js';
 import { DESTINATIONS, OFFER_TITLES, TYPES } from './consts.js';
 
+const maxDayGap = 7;
+const OFFERS_MIN_COUNT = 0;
+const OFFERS_MAX_COUNT = 5;
+
 const generateDateFrom = () => {
-  const maxDayGap = 7;
   const gap = getRandomInt(-maxDayGap, maxDayGap);
 
   return dayjs().add(gap, 'day').toDate();
 };
 
-const generateDateTo = (startTime) => dayjs(startTime).add(getRandomInt(3, 9) * 10, 'minute').toDate();
+const generateDateTo = (startTime) => dayjs(startTime).add(getRandomInt(1, 9) * 10, 'minute').toDate();
 
 const generateEventOffers = () => {
-  const OFFERS_MIN_COUNT = 0;
-  const OFFERS_MAX_COUNT = 5;
-
   const count = getRandomInt(OFFERS_MIN_COUNT, OFFERS_MAX_COUNT);
   const offerRandomTitles = shuffleArr(OFFER_TITLES).slice(0, count);
   const offers = [];

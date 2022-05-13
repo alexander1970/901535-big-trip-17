@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { generateOffers } from '../mock/offers.js';
 import { createElement } from '../render.js';
 import { calcDuration, capitalizeFirstLetter } from '../utils.js';
 
@@ -9,7 +10,7 @@ const createListPointTemplate = (point) => {
     dateTo,
     destination,
     isFavorite,
-    // offers,
+    offers,
     type
   } = point;
 
@@ -37,13 +38,7 @@ const createListPointTemplate = (point) => {
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
-        <ul class="event__selected-offers">
-          <li class="event__offer">
-            <span class="event__offer-title">Order Uber</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">20</span>
-          </li>
-        </ul>
+        ${generateOffers(offers)}
         <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -59,23 +54,26 @@ const createListPointTemplate = (point) => {
 };
 
 export default class NewTripListPointTemplateView {
+  #element = null;
+  #point = null;
+
   constructor(point) {
-    this.point = point;
+    this.#point = point;
   }
 
-  getTemplate() {
-    return createListPointTemplate(this.point);
+  get template() {
+    return createListPointTemplate(this.#point);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
