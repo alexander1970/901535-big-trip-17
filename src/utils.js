@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
 
+const DAY_MINUT = 1440;
+
 const getRandomInt = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -52,7 +54,7 @@ const calcDuration = (begin, end) => {
 
   if (durationInMinutes < 60) {
     return `${getTwoDigits(durationInMinutes)} M`;
-  } else if (durationInMinutes < 86400) {
+  } else if (durationInMinutes < DAY_MINUT) {
     return `${getTwoDigits(durationInHours)} H ${getTwoDigits(+durationInMinutes - durationInHours * 60)} M`;
   } else {
     return `${getTwoDigits(durationInDays)} D ${getTwoDigits(+durationInHours - durationInDays * 24)} H
