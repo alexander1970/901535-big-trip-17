@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
 const createNewEventButtonTemplate = () => `
   <button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">
@@ -6,22 +6,18 @@ const createNewEventButtonTemplate = () => `
   </button>
 `;
 
-export default class NewEventButtonView {
-  #element = null;
-
+export default class NewEventButtonView extends AbstractView {
   get template() {
     return createNewEventButtonTemplate();
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  // setClickHandler = (callback) => {
+  //   this._callback.click = callback;
+  //   this.element.addEventListener('click', this.#clickHandler);
+  // };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  // #clickHandler = (evt) => {
+  //   evt.preventDefault();
+  //   this._callback.click();
+  // };
 }

@@ -1,4 +1,4 @@
-import { render } from './render.js';
+import { render } from '../framework/render.js';
 import NewAboutTripTemplate from './view/trip-info-view.js';
 import NewTripFiltersTemplateView from './view/trip-filters-view.js';
 import PagePresenter from './presenter/page-presenter.js';

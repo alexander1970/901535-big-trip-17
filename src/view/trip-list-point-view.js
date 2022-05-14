@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
+import AbstractView from '../framework/view/abstract-view.js';
 import { generateOffers } from '../mock/offers.js';
-import { createElement } from '../render.js';
 import { calcDuration, capitalizeFirstLetter } from '../utils.js';
 
 const createListPointTemplate = (point) => {
@@ -53,27 +53,15 @@ const createListPointTemplate = (point) => {
   `;
 };
 
-export default class NewTripListPointTemplateView {
-  #element = null;
+export default class NewTripListPointTemplateView extends AbstractView {
   #point = null;
 
   constructor(point) {
+    super();
     this.#point = point;
   }
 
   get template() {
     return createListPointTemplate(this.#point);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

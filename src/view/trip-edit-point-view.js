@@ -1,7 +1,18 @@
+/* eslint-disable no-undef */
 import dayjs from 'dayjs';
+import AbstractView from '../framework/view/abstract-view.js';
 import { TYPES } from '../mock/consts.js';
-import { createElement } from '../render.js';
 import { capitalizeFirstLetter } from '../utils.js';
+
+const BLANK_POINT = {
+  basePrice,
+  dateFrom,
+  dateTo,
+  destination,
+  isFavorite,
+  offers,
+  type
+};
 
 const renderDestinationText = (description) => `<p class="event__destination-description">${description}</p>`;
 
@@ -131,27 +142,15 @@ const createEditPointTemplate = (point) => {
   `;
 };
 
-export default class NewEditPointTemplateView {
-  #element = null;
+export default class NewEditPointTemplateView extends AbstractView {
   #point = null;
 
-  constructor(point) {
+  constructor(point = BLANK_POINT) {
+    super();
     this.#point = point;
   }
 
   get template() {
     return createEditPointTemplate(this.#point);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

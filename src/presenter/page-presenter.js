@@ -1,4 +1,4 @@
-import { render } from '../render.js';
+import { render } from '../framework/render.js';
 import EventsEmpty from '../view/events-empty.js';
 import NewEditPointTemplateView from '../view/trip-edit-point-view.js';
 import NewTripListPointTemplateView from '../view/trip-list-point-view.js';
