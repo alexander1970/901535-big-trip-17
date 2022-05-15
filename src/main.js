@@ -1,9 +1,9 @@
-import { render } from '../framework/render.js';
 import NewAboutTripTemplate from './view/trip-info-view.js';
 import NewTripFiltersTemplateView from './view/trip-filters-view.js';
 import PagePresenter from './presenter/page-presenter.js';
 import PointModel from './model/point-model.js';
 import NewEventButtonView from './view/new-event-button.js';
+import { render } from './framework/render.js';
 
 const pageHeader = document.querySelector('.page-header');
 const tripMainElement = pageHeader.querySelector('.trip-main__trip-info');

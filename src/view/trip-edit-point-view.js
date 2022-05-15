@@ -1,17 +1,16 @@
-/* eslint-disable no-undef */
 import dayjs from 'dayjs';
 import AbstractView from '../framework/view/abstract-view.js';
 import { TYPES } from '../mock/consts.js';
-import { capitalizeFirstLetter } from '../utils.js';
+import { capitalizeFirstLetter } from '../utils/common.js';
 
 const BLANK_POINT = {
-  basePrice,
-  dateFrom,
-  dateTo,
-  destination,
-  isFavorite,
-  offers,
-  type
+  basePrice: 0,
+  dateFrom: null,
+  dateTo: null,
+  destination: '',
+  isFavorite: false,
+  offers: null,
+  type: ''
 };
 
 const renderDestinationText = (description) => `<p class="event__destination-description">${description}</p>`;
@@ -66,7 +65,7 @@ const getSelectButton = (eventType) => `
 
 const renderSelectButtons = (types) => types.map(getSelectButton).join(' ');
 
-const createEditPointTemplate = (point) => {
+const createEditPointTemplate = (point = {}) => {
   const {
     basePrice,
     dateFrom,
@@ -148,9 +147,31 @@ export default class NewEditPointTemplateView extends AbstractView {
   constructor(point = BLANK_POINT) {
     super();
     this.#point = point;
+
+    this.#buttonClickHandler = this.#buttonClickHandler.bind(this);
+    this.#formSubmitHandler = this.#formSubmitHandler.bind(this);
   }
 
   get template() {
     return createEditPointTemplate(this.#point);
   }
+
+  setButtonClickHandler = (callback) => {
+    this._callback.buttonClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonClickHandler);
+  };
+
+  #buttonClickHandler = () => {
+    this._callback.buttonClick();
+  };
+
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  };
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  };
 }
