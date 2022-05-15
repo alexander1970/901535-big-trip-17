@@ -1,7 +1,17 @@
 import dayjs from 'dayjs';
+import AbstractView from '../framework/view/abstract-view.js';
 import { TYPES } from '../mock/consts.js';
-import { createElement } from '../render.js';
-import { capitalizeFirstLetter } from '../utils.js';
+import { capitalizeFirstLetter } from '../utils/common.js';
+
+const BLANK_POINT = {
+  basePrice: 0,
+  dateFrom: null,
+  dateTo: null,
+  destination: '',
+  isFavorite: false,
+  offers: null,
+  type: ''
+};
 
 const renderDestinationText = (description) => `<p class="event__destination-description">${description}</p>`;
 
@@ -55,7 +65,7 @@ const getSelectButton = (eventType) => `
 
 const renderSelectButtons = (types) => types.map(getSelectButton).join(' ');
 
-const createEditPointTemplate = (point) => {
+const createEditPointTemplate = (point = {}) => {
   const {
     basePrice,
     dateFrom,
@@ -131,27 +141,37 @@ const createEditPointTemplate = (point) => {
   `;
 };
 
-export default class NewEditPointTemplateView {
-  #element = null;
+export default class NewEditPointTemplateView extends AbstractView {
   #point = null;
 
-  constructor(point) {
+  constructor(point = BLANK_POINT) {
+    super();
     this.#point = point;
+
+    this.#buttonClickHandler = this.#buttonClickHandler.bind(this);
+    this.#formSubmitHandler = this.#formSubmitHandler.bind(this);
   }
 
   get template() {
     return createEditPointTemplate(this.#point);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setButtonClickHandler = (callback) => {
+    this._callback.buttonClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonClickHandler);
+  };
 
-    return this.#element;
-  }
+  #buttonClickHandler = () => {
+    this._callback.buttonClick();
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  };
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  };
 }

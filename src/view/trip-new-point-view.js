@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const creatNewPointTemplate = (point) => {
   // eslint-disable-next-line no-empty-pattern
@@ -183,22 +183,8 @@ const creatNewPointTemplate = (point) => {
   `;
 };
 
-export default class NewNewPointTemplateView {
-  #element = null;
-
+export default class NewNewPointTemplateView extends AbstractView {
   get template() {
     return creatNewPointTemplate();
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
