@@ -1,5 +1,4 @@
-// eslint-disable-next-line quotes
-import { createElement } from "../render.js";
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createTripPointTemplate = () => (
   `<li class="trip-events__item">
@@ -41,22 +40,8 @@ const createTripPointTemplate = () => (
   </li>`
 );
 
-export default class NewTripPointTemplateView {
-  #element;
-
+export default class NewTripPointTemplateView extends AbstractView {
   get template() {
     return createTripPointTemplate();
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

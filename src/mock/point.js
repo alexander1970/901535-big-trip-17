@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { getRandomElement, getRandomInt, shuffleArr } from '../utils.js';
+import { getRandomElement, getRandomInt, shuffleArr } from '../utils/common.js';
 import { DESTINATIONS, OFFER_TITLES, TYPES } from './consts.js';
 
 const maxDayGap = 7;

@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
+import AbstractView from '../framework/view/abstract-view.js';
 import { generateOffers } from '../mock/offers.js';
-import { createElement } from '../render.js';
-import { calcDuration, capitalizeFirstLetter } from '../utils.js';
+import { capitalizeFirstLetter } from '../utils/common.js';
+import { calcDuration } from '../utils/point.js';
 
 const createListPointTemplate = (point) => {
   const {
@@ -53,27 +54,26 @@ const createListPointTemplate = (point) => {
   `;
 };
 
-export default class NewTripListPointTemplateView {
-  #element = null;
+export default class NewTripListPointTemplateView extends AbstractView {
   #point = null;
 
   constructor(point) {
+    super();
     this.#point = point;
+
+    this.#buttonClickHandler = this.#buttonClickHandler.bind(this);
   }
 
   get template() {
     return createListPointTemplate(this.#point);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setButtonClickHandler = (callback) => {
+    this._callback.buttonClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonClickHandler);
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #buttonClickHandler = () => {
+    this._callback.buttonClick();
+  };
 }
