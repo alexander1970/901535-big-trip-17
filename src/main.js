@@ -4,6 +4,7 @@ import PagePresenter from './presenter/page-presenter.js';
 import PointModel from './model/point-model.js';
 import NewEventButtonView from './view/new-event-button.js';
 import { render } from './framework/render.js';
+import { getSortedPoints, SortType } from './utils/sort.js';
 
 const pageHeader = document.querySelector('.page-header');
 const tripMainElement = pageHeader.querySelector('.trip-main__trip-info');
@@ -13,8 +14,9 @@ const pageMain = document.querySelector('.page-body__page-main');
 const tripEventsSection = pageMain.querySelector('.trip-events');
 const pagePresenter = new PagePresenter();
 const pointModel = new PointModel();
+const pointSorted = getSortedPoints(pointModel, SortType.DAY);
 
-render(new NewAboutTripTemplate(), tripMainElement);
+render(new NewAboutTripTemplate(pointSorted), tripMainElement);
 render(new NewTripFiltersTemplateView(), tripControlsElement);
 render(new NewEventButtonView(), tripMain);
 

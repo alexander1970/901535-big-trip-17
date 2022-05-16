@@ -1,22 +1,22 @@
 import dayjs from 'dayjs';
 
-const DAY_MINUT = 1440;
+const HOUR_MINUT = 60;
+const DAY_HOURS = 24;
+const DAY_MINUT = DAY_HOURS * HOUR_MINUT;
 
 const getTwoDigits = (number) => number.toString().length === 1 ? `0${number}` : `${number}`;
 
-const calcDuration = (begin, end) => {
+export const calcDuration = (begin, end) => {
   const durationInMinutes = dayjs(end).diff(begin, 'minutes');
-  const durationInHours = Math.floor(durationInMinutes / 60);
-  const durationInDays = Math.floor(durationInHours / 24);
+  const durationInHours = Math.floor(durationInMinutes / HOUR_MINUT);
+  const durationInDays = Math.floor(durationInHours / DAY_HOURS);
 
-  if (durationInMinutes < 60) {
+  if (durationInMinutes < HOUR_MINUT) {
     return `${getTwoDigits(durationInMinutes)} M`;
   } else if (durationInMinutes < DAY_MINUT) {
-    return `${getTwoDigits(durationInHours)} H ${getTwoDigits(+durationInMinutes - durationInHours * 60)} M`;
+    return `${getTwoDigits(durationInHours)} H ${getTwoDigits(+durationInMinutes - durationInHours * HOUR_MINUT)} M`;
   } else {
-    return `${getTwoDigits(durationInDays)} D ${getTwoDigits(+durationInHours - durationInDays * 24)} H
-            ${getTwoDigits(+durationInMinutes - durationInHours * 60)} M}`;
+    return `${getTwoDigits(durationInDays)} D ${getTwoDigits(+durationInHours - durationInDays * DAY_HOURS)} H
+            ${getTwoDigits(+durationInMinutes - durationInHours * HOUR_MINUT)} M}`;
   }
 };
-
-export { calcDuration };
