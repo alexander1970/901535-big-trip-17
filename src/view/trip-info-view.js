@@ -1,30 +1,20 @@
-import dayjs from 'dayjs';
 import AbstractView from '../framework/view/abstract-view.js';
-
-const humanizeMaxDate = (min, max) => (dayjs(min).format('MMM') === dayjs(max).format('MMM')) ? `${dayjs(max).format('DD')}` : `${dayjs(max).format('MMM DD')}`;
 
 const createTripTemplate = (points) => {
   const destinations =new Set(points.map((point) => point.destination));
-  const dates = points.map((point) => point.date);
-  const minDate = new Date(Math.min(...dates));
-  const maxDate = new Date(Math.max(...dates));
 
   return `
     <div class="trip-info__main">
       <h1 class="trip-info__title">
-        ${[...destinations].join(' &mdash; ')}
+        Amsterdam &mdash; Chamonix &mdash; Geneva
       </h1>
 
-      <p class="trip-info__dates">
-        ${dayjs(minDate).format('MMM DD')}&nbsp;&mdash;&nbsp;${humanizeMaxDate(minDate, maxDate)}
-      </p>
+      <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
     </div>
   `;
 };
 
-const createAboutTripTemplate = (points) => !points.length ? `
-  <div class="visually-hidden"> </div>
-  ` : `
+const createAboutTripTemplate = (points) => `
   <section class="trip-main__trip-info  trip-info">
     ${createTripTemplate(points)}
     <p class="trip-info__cost">

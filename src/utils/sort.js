@@ -12,6 +12,8 @@ const getSortedPoints = (points, sortType) => {
       return points.slice().sort((a, b) => a.dateFrom - b.dateFrom);
     case SortType.PRICE:
       return points.slice().sort((a, b) => a.basePrice - b.basePrice);
+    default:
+      return points;
   }
 };
 
