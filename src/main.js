@@ -21,4 +21,4 @@ render(new NewAboutTripTemplate(pointSorted), tripMainElement);
 render(new NewTripFiltersTemplateView(), tripControlsElement);
 render(new NewEventButtonView(), tripMain);
 
-pagePresenter.init(tripEventsSection, pointModel);
+pagePresenter.init(tripEventsSection, pointSorted);

@@ -9,14 +9,14 @@ export default class PagePresenter {
   #pointListComponent = new NewTripListTemplateView();
   #listComponent = this.#pointListComponent.element;
 
-  #pointModel = null;
+  // #pointModel = null;
   #tripEvents = null;
   #arrPoints = [];
 
   init = (tripEvents, pointModel) => {
     this.#tripEvents = tripEvents;
-    this.#pointModel = pointModel;
-    this.#arrPoints = [...this.#pointModel.points];
+    // this.#pointModel = pointModel;
+    this.#arrPoints = pointModel; // [...this.#pointModel.points];
 
     if (this.#arrPoints.length === 0) {
       render(new EventsEmpty, this.#tripEvents);
