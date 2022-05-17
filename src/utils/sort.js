@@ -1,13 +1,9 @@
-const SortType = {
-  DAY: 'sort-day',
-  TIME: 'sort-time',
-  PRICE: 'sort-price'
-};
+import { SortType } from '../consts.js';
 
 const getSortedPoints = (points, sortType) => {
   switch (sortType) {
     case SortType.DAY:
-      return points.slice().sort((a, b) => a.date - b.date);
+      return points.slice().sort((a, b) => a.dateFrom - b.dateFrom);
     case SortType.TIME:
       return points.slice().sort((a, b) => a.dateFrom - b.dateFrom);
     case SortType.PRICE:
@@ -17,4 +13,4 @@ const getSortedPoints = (points, sortType) => {
   }
 };
 
-export { getSortedPoints, SortType };
+export { getSortedPoints };

@@ -6,7 +6,7 @@ const DAY_MINUT = DAY_HOURS * HOUR_MINUT;
 
 const getTwoDigits = (number) => number.toString().length === 1 ? `0${number}` : `${number}`;
 
-export const calcDuration = (begin, end) => {
+const calcDuration = (begin, end) => {
   const durationInMinutes = dayjs(end).diff(begin, 'minutes');
   const durationInHours = Math.floor(durationInMinutes / HOUR_MINUT);
   const durationInDays = Math.floor(durationInHours / DAY_HOURS);
@@ -20,3 +20,5 @@ export const calcDuration = (begin, end) => {
             ${getTwoDigits(+durationInMinutes - durationInHours * HOUR_MINUT)} M}`;
   }
 };
+
+export { calcDuration };
