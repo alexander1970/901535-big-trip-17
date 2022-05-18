@@ -1,3 +1,4 @@
+import { Mode } from '../consts.js';
 import { render, replace } from '../framework/render.js';
 import EventsEmpty from '../view/events-empty.js';
 import NewEditPointTemplateView from '../view/trip-edit-point-view.js';
@@ -12,11 +13,21 @@ export default class PagePresenter {
   // #pointModel = null;
   #tripEvents = null;
   #arrPoints = [];
+  #mode = {};
+
+  constructor(changeMode) {
+    this.#changeMode = changeMode;
+
+    this.#mode = Mode.DEFAULT;
+
+    this.#escKeyDownHandler = this.#escKeyDownHandler.bind(this);
+  }
 
   init = (tripEvents, pointModel) => {
     this.#tripEvents = tripEvents;
     // this.#pointModel = pointModel;
     this.#arrPoints = pointModel; // [...this.#pointModel.points];
+    this.
 
     if (this.#arrPoints.length === 0) {
       render(new EventsEmpty, this.#tripEvents);
@@ -34,30 +45,38 @@ export default class PagePresenter {
     const pointComponent = new NewTripListPointTemplateView(point);
     const pointEditComponent = new NewEditPointTemplateView(point);
 
-    const replaceCardToForm = () => {
-      replace(pointEditComponent, pointComponent);
-    };
-
-    const replaceFormToCard = () => {
+    #replaceCardToPoint() {
       replace(pointComponent, pointEditComponent);
+      document.removeEventListener('keydown', this.#escKeyDownHandler);
+      this.#mode = Mode.DEFAULT;
     };
 
-    const onEscKeyDown = (evt) => {
+    #replacePointToCard() {
+      replace(pointEditComponent, pointComponent);
+      document.addEventListener('keydown', this.#escKeyDownHandler);
+      this.#changeMode();
+      this.#mode = Mode.EDIT;
+    };
+
+    #handleFormClick() {
+      this.
+    }
+
+    #escKeyDownHandler(evt) {
       if (evt.key === 'Escape' || evt.key === 'Esc') {
         evt.preventDefault();
-        replaceFormToCard();
-        document.removeEventListener('keydown', onEscKeyDown);
+        this.#replacePointToCard();
       }
     };
 
     pointComponent.setButtonClickHandler(() => {
-      replaceCardToForm();
-      document.addEventListener('keydown', onEscKeyDown);
+      replaceCardToPoint();
+
     });
 
     pointEditComponent.setButtonClickHandler(() => {
       replaceFormToCard();
-      document.removeEventListener('keydown', onEscKeyDown);
+
     });
 
     pointEditComponent.setFormSubmitHandler(() => {
