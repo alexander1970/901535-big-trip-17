@@ -27,7 +27,6 @@ export default class PagePresenter {
     this.#tripEvents = tripEvents;
     // this.#pointModel = pointModel;
     this.#arrPoints = pointModel; // [...this.#pointModel.points];
-    this.
 
     if (this.#arrPoints.length === 0) {
       render(new EventsEmpty, this.#tripEvents);
@@ -58,16 +57,16 @@ export default class PagePresenter {
       this.#mode = Mode.EDIT;
     };
 
-    #handleFormClick() {
-      this.
-    }
-
     #escKeyDownHandler(evt) {
       if (evt.key === 'Escape' || evt.key === 'Esc') {
         evt.preventDefault();
         this.#replacePointToCard();
       }
     };
+
+    #handleFormClick() {
+      this.#replaceCardToPoint();
+    }
 
     pointComponent.setButtonClickHandler(() => {
       replaceCardToPoint();
