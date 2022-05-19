@@ -29,7 +29,7 @@ export default class TripPresenter {
   };
 
   #renderPoint(tripPoint) {
-    const pointPresenter = new PointPresenter(this.#tripEvents, this.#handlePointChange,);
+    const pointPresenter = new PointPresenter(this.#tripEvents, this.#handlePointChange, this.#handleModeChange);
 
     pointPresenter.init(tripPoint);
 
@@ -85,11 +85,19 @@ export default class TripPresenter {
 
   #renderBoard() {
     this.#renderSort();
+
+    this.#renderList();
   }
 
   #handlePointChange(updatedPoint) {
     this.#arrPoints = updateItem(this.#arrPoints, updatedPoint);
     this.#pointPresenter[updatedPoint.id].init(updatedPoint);
+  }
+
+  #handleModeChange() {
+    Object
+      .values(this.#pointPresenter)
+      .forEach((presenter) => presenter.resetView());
   }
 
   #handleSortTypeChange(sortType) {
