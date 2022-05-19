@@ -13,12 +13,14 @@ const tripControlsElement = pageHeader.querySelector('.trip-controls__filters');
 const tripMain = pageHeader.querySelector('.trip-main');
 const pageMain = document.querySelector('.page-body__page-main');
 const tripEventsSection = pageMain.querySelector('.trip-events');
-const tripPresenter = new TripPresenter();
+
 const pointModel = new PointModel();
 const pointSorted = getSortedPoints([...pointModel.points], SortType.DAY);
+
+const tripPresenter = new TripPresenter(tripEventsSection);
 
 render(new NewAboutTripTemplate(pointSorted), tripMainElement);
 render(new NewTripFiltersTemplateView(), tripControlsElement);
 render(new NewEventButtonView(), tripMain);
 
-tripPresenter.init(tripEventsSection, pointSorted);
+tripPresenter.init(pointSorted);

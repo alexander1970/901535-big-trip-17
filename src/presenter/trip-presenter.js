@@ -1,70 +1,104 @@
-import { render, replace } from '../framework/render.js';
+import { SortType } from '../consts';
+import { render } from '../framework/render';
+import { updateItem } from '../utils/common';
+import { calcDuration } from '../utils/point';
 import EventsEmpty from '../view/events-empty.js';
-import NewEditPointTemplateView from '../view/trip-edit-point-view.js';
-import NewTripListPointTemplateView from '../view/trip-list-point-view.js';
 import NewTripListTemplateView from '../view/trip-list-view.js';
-import NewTripSortTemplateView from '../view/trip-sort-view.js';
+import NewTripSortTemplateView from '../view/trip-sort-view';
+import PointPresenter from './point-presenter';
 
 export default class TripPresenter {
   #pointListComponent = new NewTripListTemplateView();
-  #listComponent = this.#pointListComponent.element;
+  #pointSort = new NewTripSortTemplateView();
 
-  // #pointModel = null;
   #tripEvents = null;
-  #arrPoints = [];
+  #pointPresenter = {};
+  #currentSortType = SortType.DAY;
+  #arrPoints = {};
 
-  init = (tripEvents, pointModel) => {
+  constructor(tripEvents) {
     this.#tripEvents = tripEvents;
-    // this.#pointModel = pointModel;
-    this.#arrPoints = pointModel; // [...this.#pointModel.points];
+  }
 
-    if (this.#arrPoints.length === 0) {
-      render(new EventsEmpty, this.#tripEvents);
-    } else {
-      render(new NewTripSortTemplateView(), this.#tripEvents);
-      render(this.#pointListComponent, this.#tripEvents);
+  init = (arrPoints) => {
+    this.#arrPoints = arrPoints.slice();
 
-      for (const element of this.#arrPoints) {
-        this.#renderPoint(element);
-      }
+    render(this.#pointListComponent, this.#tripEvents);
+
+    this.#renderBoard();
+  };
+
+  #renderPoint(tripPoint) {
+    const pointPresenter = new PointPresenter(this.#tripEvents, this.#handlePointChange,);
+
+    pointPresenter.init(tripPoint);
+
+    this.#pointPresenter[tripPoint.id] = pointPresenter;
+  }
+
+  #renderPoints() {
+    this.#arrPoints.forEach((item) => this.#renderPoint(item));
+  }
+
+  #renderEmpty() {
+    render(new EventsEmpty(), this.#tripEvents);
+  }
+
+  #renderList() {
+    if (!this.arrPoints.length) {
+      this.#renderEmpty();
+      return;
     }
-  };
 
-  #renderPoint = (point) => {
-    const pointComponent = new NewTripListPointTemplateView(point);
-    const pointEditComponent = new NewEditPointTemplateView(point);
+    this.#renderPoints();
+  }
 
-    const replaceCardToForm = () => {
-      replace(pointEditComponent, pointComponent);
-    };
+  #clearList() {
+    Object
+      .values(this.#pointPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this.#pointPresenter = {};
+  }
 
-    const replaceFormToCard = () => {
-      replace(pointComponent, pointEditComponent);
-    };
+  #renderSort() {
+    render(this.#pointSort, this.#tripEvents);
+    this.#pointSort.setSortTypeChangeHandler(this.#handleSortTypeChange);
+  }
 
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        replaceFormToCard();
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    };
+  #sortPoints(sortType) {
+    switch (sortType) {
+      case SortType.DAY:
+        this.#arrPoints.sort((a, b) => a.dateFrom - b.dateFrom);
+        break;
+      case SortType.TIME:
+        this.#arrPoints.sort((a, b) => calcDuration(a) - calcDuration(b));
+        break;
+      case SortType.PRICE:
+        this.#arrPoints.sort((a, b) => a.basePrice - b.basePrice);
+        break;
+      default:
+        this.#arrPoints.sort((a, b) => a.dateFrom - b.dateFrom);
+    }
 
-    pointComponent.setButtonClickHandler(() => {
-      replaceCardToForm();
-      document.addEventListener('keydown', onEscKeyDown);
-    });
+    this.#currentSortType = sortType;
+  }
 
-    pointEditComponent.setButtonClickHandler(() => {
-      replaceFormToCard();
-      document.removeEventListener('keydown', onEscKeyDown);
-    });
+  #renderBoard() {
+    this.#renderSort();
+  }
 
-    pointEditComponent.setFormSubmitHandler(() => {
-      replaceFormToCard();
-      document.removeEventListener('keydown', onEscKeyDown);
-    });
+  #handlePointChange(updatedPoint) {
+    this.#arrPoints = updateItem(this.#arrPoints, updatedPoint);
+    this.#pointPresenter[updatedPoint.id].init(updatedPoint);
+  }
 
-    render(pointComponent, this.#listComponent);
-  };
+  #handleSortTypeChange(sortType) {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortPoints(sortType);
+    this.#clearList();
+    this.#renderList();
+  }
 }

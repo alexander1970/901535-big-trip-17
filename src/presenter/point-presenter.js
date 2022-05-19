@@ -1,46 +1,70 @@
-import { render } from '../framework/render';
-import EventsEmpty from '../view/events-empty';
+import { remove, render, replace } from '../framework/render';
+import NewEditPointTemplateView from '../view/trip-edit-point-view';
 import NewTripListPointTemplateView from '../view/trip-list-point-view';
-import NewTripListTemplateView from '../view/trip-list-view';
-import NewTripSortTemplateView from '../view/trip-sort-view';
 
 export default class PointPresenter {
-  #pointListComponent = new NewTripListTemplateView();
-  #listComponent = this.#pointListComponent.element;
-
-  #pointsContainer = null;
+  #tripEvents = null;
   #changeData = null;
   #changeMode = null;
 
   #pointComponent = null;
   #pointEditComponent = null;
-
-  #pointModel = null;
   #arrPoints = [];
 
-  constructor(pointsContainer, changeData, changeMode) {
-    this.#pointsContainer = pointsContainer;
+  constructor(tripEvents, changeData, changeMode) {
+    this.#tripEvents = tripEvents;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
   }
 
-  init(pointModel) {
-    this.#pointModel = pointModel;
-    this.#arrPoints = [...this.#pointModel.points];
+  init(arrPoints) {
+    this.#arrPoints = arrPoints;
 
-    if (this.#arrPoints.length === 0) {
-      render(new EventsEmpty, this.#pointsContainer);
-    } else {
-      render(new NewTripSortTemplateView, this.#pointsContainer);
-      render(this.#pointListComponent, this.#pointComponent);
-
-      for (const element of this.#arrPoints) {
-        this.#renderPoint(element);
-      }
+    for (const element of this.#arrPoints) {
+      this.#renderPoint(element);
     }
+  }
+
+  destroy() {
+    remove(this.#pointComponent);
+    remove(this.#pointEditComponent);
   }
 
   #renderPoint = (point) => {
     this.#pointComponent = new NewTripListPointTemplateView(point);
-  }
+    this.#pointEditComponent = new NewEditPointTemplateView(point);
+
+    const replaceCardToForm = () => {
+      replace(this.#pointEditComponent, this.#pointComponent);
+    };
+
+    const replaceFormToCard = () => {
+      replace(this.#pointComponent, this.#pointEditComponent);
+    };
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        replaceFormToCard();
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    };
+
+    this.#pointComponent.setButtonClickHandler(() => {
+      replaceCardToForm();
+      document.addEventListener('keydown', onEscKeyDown);
+    });
+
+    this.#pointEditComponent.setButtonClickHandler(() => {
+      replaceFormToCard();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    this.#pointEditComponent.setFormSubmitHandler(() => {
+      replaceFormToCard();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    render(this.#pointComponent, this.#tripEvents);
+  };
 }
