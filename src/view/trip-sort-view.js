@@ -38,23 +38,23 @@ export default class NewTripSortTemplateView extends AbstractView {
   constructor() {
     super();
 
-    // this.#sortTypeChangeHandler = this.#sortTypeChangeHandler.bind(this);
+    this.#sortTypeChangeHandler = this.#sortTypeChangeHandler.bind(this);
   }
 
   get template() {
     return createTripSortTemplate();
   }
 
-  setSortTypeChangeHandler(callback) {
+  setSortTypeChangeHandler = (callback) => {
     this._callback.sortTypeChange = callback;
-    this.element().addEventListener('click', this.#sortTypeChangeHandler);
-  }
+    this.element.addEventListener('click', this.#sortTypeChangeHandler);
+  };
 
-  #sortTypeChangeHandler(evt) {
+  #sortTypeChangeHandler = (evt) => {
     if (evt.target.tagName !== 'INPUT') {
       return;
     }
 
     this._callback.sortTypeChange(evt.target.dataset.sortType);
-  }
+  };
 }

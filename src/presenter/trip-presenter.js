@@ -8,8 +8,9 @@ import NewTripSortTemplateView from '../view/trip-sort-view';
 import PointPresenter from './point-presenter';
 
 export default class TripPresenter {
-  #pointListComponent = new NewTripListTemplateView();
   #pointSort = new NewTripSortTemplateView();
+  #pointListComponent = new NewTripListTemplateView();
+  #listComponent = this.#pointListComponent.element;
 
   #tripEvents = null;
   #pointPresenter = {};
@@ -18,6 +19,10 @@ export default class TripPresenter {
 
   constructor(tripEvents) {
     this.#tripEvents = tripEvents;
+
+    this.#handlePointChange = this.#handlePointChange.bind(this);
+    this.#handleModeChange = this.#handleModeChange.bind(this);
+    this.#handleSortTypeChange = this.#handleSortTypeChange.bind(this);
   }
 
   init = (arrPoints) => {
@@ -28,44 +33,44 @@ export default class TripPresenter {
     this.#renderBoard();
   };
 
-  #renderPoint(tripPoint) {
-    const pointPresenter = new PointPresenter(this.#tripEvents, this.#handlePointChange, this.#handleModeChange);
+  #renderPoint = (tripPoint) => {
+    const pointPresenter = new PointPresenter(this.#listComponent, this.#handlePointChange, this.#handleModeChange);
 
     pointPresenter.init(tripPoint);
 
     this.#pointPresenter[tripPoint.id] = pointPresenter;
-  }
+  };
 
-  #renderPoints() {
+  #renderPoints = () => {
     this.#arrPoints.forEach((item) => this.#renderPoint(item));
-  }
+  };
 
-  #renderEmpty() {
+  #renderEmpty = () => {
     render(new EventsEmpty(), this.#tripEvents);
-  }
+  };
 
-  #renderList() {
-    if (!this.arrPoints.length) {
+  #renderList = () => {
+    if (!this.#arrPoints.length) {
       this.#renderEmpty();
       return;
     }
 
     this.#renderPoints();
-  }
+  };
 
-  #clearList() {
+  #clearList = () => {
     Object
       .values(this.#pointPresenter)
       .forEach((presenter) => presenter.destroy());
     this.#pointPresenter = {};
-  }
+  };
 
-  #renderSort() {
+  #renderSort = () => {
     render(this.#pointSort, this.#tripEvents);
     this.#pointSort.setSortTypeChangeHandler(this.#handleSortTypeChange);
-  }
+  };
 
-  #sortPoints(sortType) {
+  #sortPoints = (sortType) => {
     switch (sortType) {
       case SortType.DAY:
         this.#arrPoints.sort((a, b) => a.dateFrom - b.dateFrom);
@@ -81,26 +86,26 @@ export default class TripPresenter {
     }
 
     this.#currentSortType = sortType;
-  }
+  };
 
-  #renderBoard() {
+  #renderBoard = () => {
     this.#renderSort();
 
     this.#renderList();
-  }
+  };
 
-  #handlePointChange(updatedPoint) {
+  #handlePointChange = (updatedPoint) => {
     this.#arrPoints = updateItem(this.#arrPoints, updatedPoint);
     this.#pointPresenter[updatedPoint.id].init(updatedPoint);
-  }
+  };
 
-  #handleModeChange() {
+  #handleModeChange = () => {
     Object
       .values(this.#pointPresenter)
       .forEach((presenter) => presenter.resetView());
-  }
+  };
 
-  #handleSortTypeChange(sortType) {
+  #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
     }
@@ -108,5 +113,5 @@ export default class TripPresenter {
     this.#sortPoints(sortType);
     this.#clearList();
     this.#renderList();
-  }
+  };
 }
