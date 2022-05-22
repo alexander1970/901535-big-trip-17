@@ -66,7 +66,7 @@ export default class TripPresenter {
   };
 
   #renderSort = () => {
-    render(this.#pointSort, this.#tripEvents);
+    render(this.#pointSort, this.#listComponent);
     this.#pointSort.setSortTypeChangeHandler(this.#handleSortTypeChange);
   };
 

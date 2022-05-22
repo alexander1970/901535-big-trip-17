@@ -31,8 +31,8 @@ export default class PointPresenter {
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 
-    this.#pointComponent = new NewTripListPointTemplateView(arrPoints);
-    this.#pointEditComponent = new NewEditPointTemplateView(arrPoints);
+    this.#pointComponent = new NewTripListPointTemplateView(this.#arrPoints);
+    this.#pointEditComponent = new NewEditPointTemplateView(this.#arrPoints);
 
     this.#pointComponent.setEditClickHandler(this.#handlePointClick);
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
@@ -83,7 +83,7 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      this.#replacePointToCard();
+      this.#replaceCardToPoint();
     }
   };
 
