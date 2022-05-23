@@ -34,7 +34,7 @@ export default class PointPresenter {
     this.#pointComponent = new NewTripListPointTemplateView(this.#arrPoints);
     this.#pointEditComponent = new NewEditPointTemplateView(this.#arrPoints);
 
-    this.#pointComponent.setEditClickHandler(this.#handlePointClick);
+    this.#pointComponent.setButtonClickHandler(this.#handlePointClick);
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointEditComponent.setButtonClickHandler(this.#handleFormClick);

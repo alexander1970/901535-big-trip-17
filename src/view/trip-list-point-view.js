@@ -83,7 +83,7 @@ export default class NewTripListPointTemplateView extends AbstractView {
     this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
   };
 
-  setEditClickHandler = (callback) => {
+  setButtonClickHandler = (callback) => {
     this._callback.buttonClick = callback;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonClickHandler);
   };
