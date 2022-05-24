@@ -17,12 +17,6 @@ export default class PointPresenter {
     this.#tripEvents = tripEvents;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
-
-    this.#handlePointClick = this.#handlePointClick.bind(this);
-    this.#handleFavoriteClick = this.#handleFavoriteClick.bind(this);
-    this.#handleFormClick = this.#handleFavoriteClick.bind(this);
-    this.#handleFormSubmit = this.#handleFormSubmit.bind(this);
-    this.#escKeyDownHandler = this.#escKeyDownHandler.bind(this);
   }
 
   init = (arrPoints) => {
@@ -34,21 +28,21 @@ export default class PointPresenter {
     this.#pointComponent = new NewTripListPointTemplateView(this.#arrPoints);
     this.#pointEditComponent = new NewEditPointTemplateView(this.#arrPoints);
 
-    this.#pointComponent.setButtonClickHandler(this.#handlePointClick);
-    this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#pointComponent.setEditClickHandler(this.#handleEditClick);
+    // this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
-    this.#pointEditComponent.setButtonClickHandler(this.#handleFormClick);
+    // this.#pointEditComponent.setButtonClickHandler(this.#handleFormClick);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointComponent, this.#tripEvents);
       return;
     }
 
-    if (this.#mode === Mode.DEFAULT) {
+    if (this.#pointComponent.contains(prevPointComponent.element)) {  //this.#mode === Mode.DEFAULT
       replace(this.#pointComponent, prevPointComponent);
     }
 
-    if (this.#mode === Mode.EDIT) {
+    if (this.#pointEditComponent.contains(prevPointEditComponent.element)) {  // this.#mode === Mode.EDIT
       replace(this.#pointEditComponent, prevPointEditComponent);
     }
 
@@ -61,54 +55,54 @@ export default class PointPresenter {
     remove(this.#pointEditComponent);
   };
 
-  resetView = () => {
-    if (this.#mode !== Mode.DEFAULT) {
-      this.#replaceCardToPoint();
-    }
-  };
+  // resetView = () => {
+  //   if (this.#mode !== Mode.DEFAULT) {
+  //     this.#replaceCardToPoint();
+  //   }
+  // };
 
-  #replaceCardToPoint = () => {
-    replace(this.#pointComponent, this.#pointEditComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
-    this.#mode = Mode.DEFAULT;
-  };
-
-  #replacePointToCard = () => {
+  #replaceCardToForm = () => {
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#changeMode();
-    this.#mode = Mode.EDIT;
+    // this.#changeMode();
+    // this.#mode = Mode.EDIT;
+  };
+
+  #replaceFormToCard = () => {
+    replace(this.#pointComponent, this.#pointEditComponent);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    // this.#mode = Mode.DEFAULT;
   };
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      this.#replaceCardToPoint();
+      this.#replaceFormToCard();
     }
   };
 
-  #handlePointClick = () => {
-    this.#replacePointToCard();
+  #handleEditClick = () => {
+    this.#replaceCardToForm();
   };
 
-  #handleFormClick = () => {
-    this.#replaceCardToPoint();
+  // #handleFormClick = () => {
+  //   this.#replaceCardToPoint();
+  // };
+
+  #handleFormSubmit = () => { //point
+    // this.#changeData(point);
+    this.#replaceFormToCard();
   };
 
-  #handleFormSubmit = (point) => {
-    this.#changeData(point);
-    this.#replaceCardToPoint();
-  };
-
-  #handleFavoriteClick = () => {
-    this.#changeData(
-      Object.assign(
-        {},
-        this.#arrPoints,
-        {
-          isFinite: !this.#arrPoints.isFinite
-        }
-      )
-    );
-  };
+  // #handleFavoriteClick = () => {
+  //   this.#changeData(
+  //     Object.assign(
+  //       {},
+  //       this.#arrPoints,
+  //       {
+  //         isFinite: !this.#arrPoints.isFinite
+  //       }
+  //     )
+  //   );
+  // };
 }

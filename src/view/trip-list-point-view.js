@@ -60,17 +60,19 @@ export default class NewTripListPointTemplateView extends AbstractView {
   constructor(point) {
     super();
     this.#point = point;
-
-    this.#buttonClickHandler = this.#buttonClickHandler.bind(this);
-    this.#favoriteClickHandler = this.#favoriteClickHandler.bind(this);
   }
 
   get template() {
     return createListPointTemplate(this.#point);
   }
 
-  #buttonClickHandler = () => {
-    this._callback.buttonClick();
+  setEditClickHandler = (callback) => {
+    this._callback.editClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+  };
+
+  #editClickHandler = () => {
+    this._callback.editClick();
   };
 
   #favoriteClickHandler = (evt) => {
@@ -81,10 +83,5 @@ export default class NewTripListPointTemplateView extends AbstractView {
   setFavoriteClickHandler = (callback) => {
     this._callback.favoriteClick = callback;
     this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
-  };
-
-  setButtonClickHandler = (callback) => {
-    this._callback.buttonClick = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonClickHandler);
   };
 }
