@@ -13,16 +13,12 @@ export default class TripPresenter {
   #listComponent = this.#pointListComponent.element;
 
   #tripEvents = null;
-  #pointPresenter = {};
+  #pointPresenter = new Map();
   #currentSortType = SortType.DAY;
   #arrPoints = {};
 
   constructor(tripEvents) {
     this.#tripEvents = tripEvents;
-
-    this.#handlePointChange = this.#handlePointChange.bind(this);
-    this.#handleModeChange = this.#handleModeChange.bind(this);
-    this.#handleSortTypeChange = this.#handleSortTypeChange.bind(this);
   }
 
   init = (arrPoints) => {
@@ -33,12 +29,10 @@ export default class TripPresenter {
     this.#renderBoard();
   };
 
-  #renderPoint = (tripPoint) => {
+  #renderPoint = (point) => {
     const pointPresenter = new PointPresenter(this.#listComponent, this.#handlePointChange, this.#handleModeChange);
-
-    pointPresenter.init(tripPoint);
-
-    this.#pointPresenter[tripPoint.id] = pointPresenter;
+    pointPresenter.init(point);
+    this.#pointPresenter.set(point.id, pointPresenter);
   };
 
   #renderPoints = () => {

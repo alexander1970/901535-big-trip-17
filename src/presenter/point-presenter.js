@@ -1,4 +1,4 @@
-import { Mode } from '../consts.js';
+// import { Mode } from '../consts.js';
 import { remove, render, replace } from '../framework/render.js';
 import NewEditPointTemplateView from '../view/trip-edit-point-view.js';
 import NewTripListPointTemplateView from '../view/trip-list-point-view.js';
@@ -6,17 +6,17 @@ import NewTripListPointTemplateView from '../view/trip-list-point-view.js';
 export default class PointPresenter {
   #tripEvents = null;
   #changeData = null;
-  #changeMode = null;
+  // #changeMode = null;
 
   #pointComponent = null;
   #pointEditComponent = null;
-  #mode = Mode.DEFAULT;
+  // #mode = Mode.DEFAULT;
   #arrPoints = [];
 
-  constructor(tripEvents, changeData, changeMode) {
+  constructor(tripEvents, changeData) { // , changeMode
     this.#tripEvents = tripEvents;
     this.#changeData = changeData;
-    this.#changeMode = changeMode;
+    // this.#changeMode = changeMode;
   }
 
   init = (arrPoints) => {
@@ -29,9 +29,9 @@ export default class PointPresenter {
     this.#pointEditComponent = new NewEditPointTemplateView(this.#arrPoints);
 
     this.#pointComponent.setEditClickHandler(this.#handleEditClick);
-    // this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
-    // this.#pointEditComponent.setButtonClickHandler(this.#handleFormClick);
+    this.#pointEditComponent.setButtonClickHandler(this.#handleFormClick);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointComponent, this.#tripEvents);
@@ -85,24 +85,24 @@ export default class PointPresenter {
     this.#replaceCardToForm();
   };
 
-  // #handleFormClick = () => {
-  //   this.#replaceCardToPoint();
-  // };
-
-  #handleFormSubmit = () => { //point
-    // this.#changeData(point);
+  #handleFormClick = () => {
     this.#replaceFormToCard();
   };
 
-  // #handleFavoriteClick = () => {
-  //   this.#changeData(
-  //     Object.assign(
-  //       {},
-  //       this.#arrPoints,
-  //       {
-  //         isFinite: !this.#arrPoints.isFinite
-  //       }
-  //     )
-  //   );
-  // };
+  #handleFormSubmit = (point) => {
+    this.#changeData(point);
+    this.#replaceFormToCard();
+  };
+
+  #handleFavoriteClick = () => {
+    this.#changeData(
+      Object.assign(
+        {},
+        this.#arrPoints,
+        {
+          isFinite: !this.#arrPoints.isFinite
+        }
+      )
+    );
+  };
 }
