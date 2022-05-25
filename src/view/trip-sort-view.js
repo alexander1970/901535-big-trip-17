@@ -38,12 +38,6 @@ const createTripSortTemplate = () => `
 `;
 
 export default class NewTripSortTemplateView extends AbstractView {
-  constructor() {
-    super();
-
-    this.#sortTypeChangeHandler = this.#sortTypeChangeHandler.bind(this);
-  }
-
   get template() {
     return createTripSortTemplate();
   }
@@ -58,6 +52,7 @@ export default class NewTripSortTemplateView extends AbstractView {
       return;
     }
 
+    evt.preventDefault();
     this._callback.sortTypeChange(evt.target.dataset.sortType);
   };
 }
