@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { TYPES } from '../mock/consts.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
 
@@ -10,12 +10,13 @@ const BLANK_POINT = {
   destination: '',
   isFavorite: false,
   offers: null,
-  type: ''
+  type: '',
+  description: ''
 };
 
 const renderDestinationText = (description) => `<p class="event__destination-description">${description}</p>`;
 
-const renderDestination = (description) => (!description) ? '' : `
+const renderDestination = (description, haveDescription) => !haveDescription ? '' : `
   <section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
     ${renderDestinationText(description)}
@@ -44,7 +45,7 @@ const getOfferTemplate = (offer) => {
   `;
 };
 
-const renderOffers = (offers) => (!offers.length) ? '' : `
+const renderOffers = (offers, haveOffers) => !haveOffers ? '' : `
   <section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
@@ -53,29 +54,36 @@ const renderOffers = (offers) => (!offers.length) ? '' : `
   </section>
 `;
 
-const getSelectButton = (eventType) => `
-  <div class="event__type-item">
-    <input id="event-type-${eventType.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio"
-      name="event-type" value="${eventType.toLowerCase()}">
-    <label class="event__type-label  event__type-label--${eventType.toLowerCase()}" for="event-type-${eventType.toLowerCase()}">
-      ${capitalizeFirstLetter(eventType)}
-    </label>
-  </div>
-`;
+const getSelectButton = (type, isTypeMatch) => {
+  const selectTypeLowerCase = type.toLowerCase();
 
-const renderSelectButtons = (types) => types.map(getSelectButton).join(' ');
+  return `
+    <div class="event__type-item">
+      <input id="event-type-${selectTypeLowerCase}-1" class="event__type-input  visually-hidden" type="radio"
+        name="event-type" value="${selectTypeLowerCase}" ${isTypeMatch ? 'checked' : ''}>
+      <label class="event__type-label  event__type-label--${selectTypeLowerCase}" for="event-type-${selectTypeLowerCase}">
+        ${capitalizeFirstLetter(type)}
+      </label>
+    </div>
+  `;
+};
 
-const createEditPointTemplate = (point = {}) => {
+const createEditPointTemplate = (point, isNew) => {
   const {
     basePrice,
     dateFrom,
     dateTo,
     destination,
-    isFavorite,
     offers,
     type,
-    description
+    description,
+    haveOffers,
+    haveDescription
   } = point;
+
+  const offersTemplate = renderOffers(offers, haveOffers);
+  const descriptionTemplate = renderDestination(description, haveDescription);
+  const typesListTemplate = TYPES.map((currentType) => getSelectButton(currentType, currentType === type)).join(' ');
 
   return `
     <li class="trip-events__item">
@@ -91,7 +99,7 @@ const createEditPointTemplate = (point = {}) => {
               <div class="event__type-list">
                 <fieldset class="event__type-group">
                   <legend class="visually-hidden">Event type</legend>
-                  ${renderSelectButtons(TYPES)}
+                  ${typesListTemplate}
                 </fieldset>
               </div>
             </div>
@@ -128,40 +136,36 @@ const createEditPointTemplate = (point = {}) => {
             </div>
 
             <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-            <button class="event__reset-btn" type="reset">${isFavorite ? 'Delete' : 'Cancel'}</button>
+            <button class="event__reset-btn" type="reset">${isNew ? 'Delete' : 'Cancel'}</button>
             <button class="event__rollup-btn" type="button">
               <span class="visually-hidden">Open event</span>
             </button>
           </header>
           <section class="event__details">
-            ${renderOffers(offers)}
-            ${renderDestination(description)}
+            ${offersTemplate}
+            ${descriptionTemplate}
           </section>
         </form>
       </li>
   `;
 };
 
-export default class NewEditPointTemplateView extends AbstractView {
-  #point = null;
+export default class NewEditPointTemplateView extends AbstractStatefulView {
+  #isNew = null;
 
-  constructor(point = BLANK_POINT) {
+  constructor(point = BLANK_POINT, isNew = false) {
     super();
-    this.#point = point;
+    this._state = NewEditPointTemplateView.parsePointToState(point);
+    this.#isNew = isNew;
   }
 
   get template() {
-    return createEditPointTemplate(this.#point);
+    return createEditPointTemplate(this._state, this.#isNew);
   }
 
   setFormSubmitHandler = (callback) => {
     this._callback.formSubmit = callback;
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-  };
-
-  #formSubmitHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.formSubmit(this.#point);
   };
 
   setButtonClickHandler = (callback) => {
@@ -171,5 +175,32 @@ export default class NewEditPointTemplateView extends AbstractView {
 
   #buttonClickHandler = () => {
     this._callback.buttonClick();
+  };
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit(NewEditPointTemplateView.parseStateToPoint(this._state));
+  };
+
+  static parsePointToState = (point) => ({...point,
+    haveOffers: point.offers.length !== 0,
+    haveDescription: point.description !== ''
+  });
+
+  static parseStateToPoint = (state) => {
+    const point = {...state};
+
+    if (!point.haveOffers) {
+      point.offers = [];
+    }
+
+    if (!point.haveDescription) {
+      point.description = '';
+    }
+
+    delete point.haveOffers;
+    delete point.haveDescription;
+
+    return point;
   };
 }
