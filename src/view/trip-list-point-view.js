@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import AbstractView from '../framework/view/abstract-view.js';
 import { generateOffers } from '../mock/offers.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
-import { calcDuration } from '../utils/point.js';
+import { getDuration } from '../utils/point.js';
 
 const createListPointTemplate = (point) => {
   const {
@@ -32,7 +32,7 @@ const createListPointTemplate = (point) => {
             <time class="event__end-time" datetime="${dayjs(dateTo).format('YYYY-MM-DD HH:mm')}>${dayjs(dateTo).format('HH:mm')}</time>
           </p>
           <p class="event__duration">
-            ${calcDuration(dateFrom, dateTo)}
+            ${getDuration(dateFrom, dateTo)}
           </p>
         </div>
         <p class="event__price">

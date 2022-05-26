@@ -4,21 +4,23 @@ const HOUR_MINUT = 60;
 const DAY_HOURS = 24;
 const DAY_MINUT = DAY_HOURS * HOUR_MINUT;
 
-const getTwoDigits = (number) => number.toString().length === 1 ? `0${number}` : `${number}`;
-
-const calcDuration = (begin, end) => {
+const getDuration = (begin, end) => {
   const durationInMinutes = dayjs(end).diff(begin, 'minutes');
   const durationInHours = Math.floor(durationInMinutes / HOUR_MINUT);
   const durationInDays = Math.floor(durationInHours / DAY_HOURS);
 
   if (durationInMinutes < HOUR_MINUT) {
-    return `${getTwoDigits(durationInMinutes)} M`;
+    return `${durationInMinutes.toString().padStart(2, 0)}M`;
   } else if (durationInMinutes < DAY_MINUT) {
-    return `${getTwoDigits(durationInHours)} H ${getTwoDigits(+durationInMinutes - durationInHours * HOUR_MINUT)} M`;
+    return `${durationInHours.toString().padStart(2, 0)} H
+            ${(+durationInMinutes - durationInHours * HOUR_MINUT).toString().padStart(2, 0)} M`;
   } else {
-    return `${getTwoDigits(durationInDays)} D ${getTwoDigits(+durationInHours - durationInDays * DAY_HOURS)} H
-            ${getTwoDigits(+durationInMinutes - durationInHours * HOUR_MINUT)} M}`;
+    return `${durationInDays.toString().padStart(2, 0)} D
+            ${(+durationInHours - durationInDays * DAY_HOURS).toString().padStart(2, 0)} H
+            ${(+durationInMinutes - durationInHours * HOUR_MINUT).toString().padStart(2, 0)} M}`;
   }
 };
 
-export { calcDuration };
+const calcDuration = (event) => dayjs(event.dateTo).diff(event.dateFrom, 'minutes');
+
+export { getDuration, calcDuration };
