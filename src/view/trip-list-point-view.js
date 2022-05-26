@@ -27,9 +27,9 @@ const createListPointTemplate = (point) => {
         <h3 class="event__title">${capitalizeFirstLetter(type)} ${destination}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${dayjs(dateFrom).format('YYYY-MM-DDTHH:mm')}">${dayjs(dateFrom).format('HH:mm')}</time>
+            <time class="event__start-time" datetime="${dayjs(dateFrom).format('YYYY-MM-DD HH:mm')}">${dayjs(dateFrom).format('HH:mm')}</time>
             &mdash;
-            <time class="event__end-time" datetime="${dayjs(dateTo).format('YYYY-MM-DDTHH:mm')}>${dayjs(dateTo).format('HH:mm')}</time>
+            <time class="event__end-time" datetime="${dayjs(dateTo).format('YYYY-MM-DD HH:mm')}>${dayjs(dateTo).format('HH:mm')}</time>
           </p>
           <p class="event__duration">
             ${calcDuration(dateFrom, dateTo)}
@@ -60,20 +60,28 @@ export default class NewTripListPointTemplateView extends AbstractView {
   constructor(point) {
     super();
     this.#point = point;
-
-    this.#buttonClickHandler = this.#buttonClickHandler.bind(this);
   }
 
   get template() {
     return createListPointTemplate(this.#point);
   }
 
-  setButtonClickHandler = (callback) => {
-    this._callback.buttonClick = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonClickHandler);
+  setEditClickHandler = (callback) => {
+    this._callback.editClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   };
 
-  #buttonClickHandler = () => {
-    this._callback.buttonClick();
+  setFavoriteClickHandler = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
+  };
+
+  #editClickHandler = () => {
+    this._callback.editClick();
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.favoriteClick();
   };
 }

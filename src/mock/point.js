@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { nanoid } from 'nanoid';
 import { getRandomElement, getRandomInt, shuffleArr } from '../utils/common.js';
 import { DESTINATIONS, OFFER_TITLES, TYPES } from './consts.js';
 
@@ -35,6 +36,7 @@ export const generatePoint = () => {
   const date = generateDateFrom();
 
   return {
+    id: nanoid(),
     basePrice: getRandomInt(1, 100) * 10,
     dateFrom: date,
     dateTo: generateDateTo(date),
