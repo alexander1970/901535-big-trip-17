@@ -73,7 +73,8 @@ const createEditPointTemplate = (point = {}) => {
     destination,
     isFavorite,
     offers,
-    type
+    type,
+    description
   } = point;
 
   return `
@@ -134,7 +135,7 @@ const createEditPointTemplate = (point = {}) => {
           </header>
           <section class="event__details">
             ${renderOffers(offers)}
-            ${renderDestination(destination)}
+            ${renderDestination(description)}
           </section>
         </form>
       </li>
