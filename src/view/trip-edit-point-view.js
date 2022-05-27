@@ -1,7 +1,10 @@
 import dayjs from 'dayjs';
+import flatpickr from 'flatpickr';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { TYPES } from '../mock/consts.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
+
+import 'flatpickr/dist/flatpickr.min.css';
 
 const BLANK_POINT = {
   basePrice: 0,
@@ -152,16 +155,26 @@ const createEditPointTemplate = (point, isNew) => {
 
 export default class NewEditPointTemplateView extends AbstractStatefulView {
   #isNew = null;
+  #startTimePicker = null;
+  #endTimePicker = null;
 
   constructor(point = BLANK_POINT, isNew = false) {
     super();
     this._state = NewEditPointTemplateView.parsePointToState(point);
     this.#isNew = isNew;
+
+    this.#setInnerHandlers();
   }
 
   get template() {
     return createEditPointTemplate(this._state, this.#isNew);
   }
+
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.#setPickers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+  };
 
   setFormSubmitHandler = (callback) => {
     this._callback.formSubmit = callback;
@@ -180,6 +193,86 @@ export default class NewEditPointTemplateView extends AbstractStatefulView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this._callback.formSubmit(NewEditPointTemplateView.parseStateToPoint(this._state));
+  };
+
+  #pointTypeChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      type: evt.target.value,
+    });
+  };
+
+  #pointDestinationChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      destination: evt.target.value,
+    }, true);
+  };
+
+  #pointPriceInputHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      basePrice: evt.target.value,
+    }, true);
+  };
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.event__field-group')
+      .addEventListener('change',this.#pointTypeChangeHandler);
+    this.element.querySelector('.event__input--destination')
+      .addEventListener('change', this.#pointDestinationChangeHandler);
+    this.element.querySelector('.event__input--price')
+      .addEventListener('input', this.#pointPriceInputHandler);
+  };
+
+  #setPickers = () => {
+    if (this.#startTimePicker) {
+      this.#startTimePicker.destroy();
+      this.#startTimePicker = null;
+    }
+
+    if (this.#endTimePicker) {
+      this.#endTimePicker.destroy();
+      this.#endTimePicker = null;
+    }
+
+    this.#startTimePicker = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'y/m/d H:i',
+        defaultDate: this._state.dateFrom,
+        maxDate: this._state.dateTo,
+        onChange: this.#startTimeChangeHandler
+      }
+    );
+
+    this.#endTimePicker = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'y/m/d H:i',
+        minDate: this._state.dateFrom,
+        defaultDate: this._state.dateTo,
+        onChange: this.#endTimeChangeHandler
+      }
+    );
+  };
+
+  #startTimeChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    }, true);
+
+    this.#endTimePicker.set('minDate', userDate);
+  };
+
+  #endTimeChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    }, true);
+
+    this.#startTimePicker.set('maxDDate', userDate);
   };
 
   static parsePointToState = (point) => ({...point,
