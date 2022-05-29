@@ -164,64 +164,35 @@ export default class NewEditPointTemplateView extends AbstractStatefulView {
     this.#isNew = isNew;
 
     this.#setInnerHandlers();
+    this.#setPickers();
   }
 
   get template() {
     return createEditPointTemplate(this._state, this.#isNew);
   }
 
+  reset = (point) => {
+    this.updateElement(
+      NewEditPointTemplateView.parsePointToState(point)
+    );
+  };
+
   _restoreHandlers = () => {
     this.#setInnerHandlers();
     this.#setPickers();
     this.setFormSubmitHandler(this._callback.formSubmit);
-  };
-
-  setFormSubmitHandler = (callback) => {
-    this._callback.formSubmit = callback;
-    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-  };
-
-  setButtonClickHandler = (callback) => {
-    this._callback.buttonClick = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonClickHandler);
-  };
-
-  #buttonClickHandler = () => {
-    this._callback.buttonClick();
-  };
-
-  #formSubmitHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.formSubmit(NewEditPointTemplateView.parseStateToPoint(this._state));
-  };
-
-  #pointTypeChangeHandler = (evt) => {
-    evt.preventDefault();
-    this.updateElement({
-      type: evt.target.value,
-    });
-  };
-
-  #pointDestinationChangeHandler = (evt) => {
-    evt.preventDefault();
-    this.updateElement({
-      destination: evt.target.value,
-    }, true);
-  };
-
-  #pointPriceInputHandler = (evt) => {
-    evt.preventDefault();
-    this.updateElement({
-      basePrice: evt.target.value,
-    }, true);
+    this.setFormRollupButtonClickHandler(this._callback.rollupButtonClick);
   };
 
   #setInnerHandlers = () => {
-    this.element.querySelector('.event__field-group')
+    this.element
+      .querySelector('.event__field-group')
       .addEventListener('change',this.#pointTypeChangeHandler);
-    this.element.querySelector('.event__input--destination')
+    this.element
+      .querySelector('.event__input--destination')
       .addEventListener('change', this.#pointDestinationChangeHandler);
-    this.element.querySelector('.event__input--price')
+    this.element
+      .querySelector('.event__input--price')
       .addEventListener('input', this.#pointPriceInputHandler);
   };
 
@@ -259,6 +230,34 @@ export default class NewEditPointTemplateView extends AbstractStatefulView {
     );
   };
 
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit(NewEditPointTemplateView.parseStateToPoint(this._state));
+  };
+
+  #rollupButtonClickHandler = () => {
+    this._callback.rollupButtonClick();
+  };
+
+  #resetButtonClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.resetButtonClick(NewEditPointTemplateView.parseStateToPoint(this._state));
+  };
+
+  #pointTypeChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      type: evt.target.value,
+    });
+  };
+
+  #pointDestinationChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      destination: evt.target.value,
+    }, true);
+  };
+
   #startTimeChangeHandler = ([userDate]) => {
     this.updateElement({
       dateFrom: userDate,
@@ -272,7 +271,29 @@ export default class NewEditPointTemplateView extends AbstractStatefulView {
       dateTo: userDate,
     }, true);
 
-    this.#startTimePicker.set('maxDDate', userDate);
+    this.#startTimePicker.set('maxDate', userDate);
+  };
+
+  #pointPriceInputHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      basePrice: evt.target.value,
+    }, true);
+  };
+
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  };
+
+  setFormRollupButtonClickHandler = (callback) => {
+    this._callback.rollupButtonClickHandler = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupButtonClickHandler);
+  };
+
+  setResetButtonClickHandler = (callback) => {
+    this._callback.buttonClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#resetButtonClickHandler);
   };
 
   static parsePointToState = (point) => ({...point,

@@ -32,7 +32,8 @@ export default class PointPresenter {
     this.#pointComponent.setEditClickHandler(this.#handleEditClick);
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
-    this.#pointEditComponent.setButtonClickHandler(this.#handleFormClick);
+    this.#pointEditComponent.setFormRollupButtonClickHandler(this.#handleFormRollupClick);
+    this.#pointEditComponent.setResetButtonClickHandler(this.#handleFormResetClick);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointComponent, this.#tripEvents);
@@ -86,8 +87,12 @@ export default class PointPresenter {
     this.#replaceCardToForm();
   };
 
-  #handleFormClick = () => {
+  #handleFormResetClick = () => {
     this.#replaceFormToCard();
+  };
+
+  #handleFormRollupClick = () => {
+    this.#replaceCardToForm();
   };
 
   #handleFormSubmit = (point) => {
