@@ -6,13 +6,13 @@ import { getDuration } from '../utils/point.js';
 
 const createListPointTemplate = (point) => {
   const {
-    basePrice,
+    type,
+    destination,
     dateFrom,
     dateTo,
-    destination,
-    isFavorite,
+    basePrice,
     offers,
-    type
+    isFavorite
   } = point;
 
   return `
@@ -66,9 +66,9 @@ export default class NewTripListPointTemplateView extends AbstractView {
     return createListPointTemplate(this.#point);
   }
 
-  setEditClickHandler = (callback) => {
-    this._callback.editClick = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+  setPointRollupButtonClickHandler = (callback) => {
+    this._callback.buttonClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupButtonClickHandler);
   };
 
   setFavoriteClickHandler = (callback) => {
@@ -76,8 +76,8 @@ export default class NewTripListPointTemplateView extends AbstractView {
     this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
   };
 
-  #editClickHandler = () => {
-    this._callback.editClick();
+  #rollupButtonClickHandler = () => {
+    this._callback.buttonClick();
   };
 
   #favoriteClickHandler = (evt) => {

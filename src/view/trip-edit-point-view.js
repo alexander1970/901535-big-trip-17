@@ -7,14 +7,14 @@ import { capitalizeFirstLetter } from '../utils/common.js';
 import 'flatpickr/dist/flatpickr.min.css';
 
 const BLANK_POINT = {
-  basePrice: 0,
-  dateFrom: null,
-  dateTo: null,
+  type: 'taxi',
   destination: '',
+  description: '',
+  offers: [],
+  basePrice: 0,
+  dateFrom: Date.now(),
+  dateTo: Date.now() + 30000,
   isFavorite: false,
-  offers: null,
-  type: '',
-  description: ''
 };
 
 const renderDestinationText = (description) => `<p class="event__destination-description">${description}</p>`;
@@ -26,20 +26,22 @@ const renderDestination = (description, haveDescription) => !haveDescription ? '
   </section>
 `;
 
+const getClassNamePart = (str) => {
+  const splitStr = str.split(' ');
+
+  return splitStr[splitStr.length - 1];
+};
+
 const getOfferTemplate = (offer) => {
   const {title, cost} = offer;
 
-  const getClassNamePart = (str) => {
-    const splitStr = str.split(' ');
-
-    return splitStr[splitStr.length - 1];
-  };
+  const classNamePart = getClassNamePart(title);
 
   return `
     <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${getClassNamePart(title)}-1" type="checkbox"
-        name="event-offer-${getClassNamePart(title)}" checked>
-      <label class="event__offer-label" for="event-offer-${getClassNamePart(title)}-1">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${classNamePart}-1" type="checkbox"
+        name="event-offer-${classNamePart}" checked>
+      <label class="event__offer-label" for="event-offer-${classNamePart}-1">
         <span class="event__offer-title">${title}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${cost}</span>
@@ -73,12 +75,12 @@ const getSelectButton = (type, isTypeMatch) => {
 
 const createEditPointTemplate = (point, isNew) => {
   const {
-    basePrice,
+    type,
+    destination,
     dateFrom,
     dateTo,
-    destination,
+    basePrice,
     offers,
-    type,
     description,
     haveOffers,
     haveDescription
@@ -175,6 +177,20 @@ export default class NewEditPointTemplateView extends AbstractStatefulView {
     this.updateElement(
       NewEditPointTemplateView.parsePointToState(point)
     );
+  };
+
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#startTimePicker) {
+      this.#startTimePicker.destroy();
+      this.#startTimePicker = null;
+    }
+
+    if (this.#endTimePicker) {
+      this.#endTimePicker.destroy();
+      this.#endTimePicker = null;
+    }
   };
 
   _restoreHandlers = () => {
@@ -287,7 +303,7 @@ export default class NewEditPointTemplateView extends AbstractStatefulView {
   };
 
   setFormRollupButtonClickHandler = (callback) => {
-    this._callback.rollupButtonClickHandler = callback;
+    this._callback.rollupButtonClick = callback;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupButtonClickHandler);
   };
 

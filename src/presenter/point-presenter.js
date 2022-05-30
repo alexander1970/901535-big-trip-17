@@ -1,4 +1,4 @@
-import { Mode } from '../consts.js';
+import { Mode, UpdateType, UserAction } from '../consts.js';
 import { remove, render, replace } from '../framework/render.js';
 import NewEditPointTemplateView from '../view/trip-edit-point-view.js';
 import NewTripListPointTemplateView from '../view/trip-list-point-view.js';
@@ -29,7 +29,7 @@ export default class PointPresenter {
     this.#pointComponent = new NewTripListPointTemplateView(this.#arrPoints);
     this.#pointEditComponent = new NewEditPointTemplateView(this.#arrPoints);
 
-    this.#pointComponent.setEditClickHandler(this.#handleEditClick);
+    this.#pointComponent.setPointRollupButtonClickHandler(this.#handlePointRollupClick);
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointEditComponent.setFormRollupButtonClickHandler(this.#handleFormRollupClick);
@@ -63,6 +63,12 @@ export default class PointPresenter {
     }
   };
 
+  #replaceFormToCard = () => {
+    replace(this.#pointComponent, this.#pointEditComponent);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
+  };
+
   #replaceCardToForm = () => {
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
@@ -70,43 +76,54 @@ export default class PointPresenter {
     this.#mode = Mode.EDIT;
   };
 
-  #replaceFormToCard = () => {
-    replace(this.#pointComponent, this.#pointEditComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
-    this.#mode = Mode.DEFAULT;
-  };
-
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this.#pointEditComponent.reset(this.#arrPoints);
       this.#replaceFormToCard();
     }
   };
 
-  #handleEditClick = () => {
+  #handlePointRollupClick = () => {
     this.#replaceCardToForm();
-  };
-
-  #handleFormResetClick = () => {
-    this.#replaceFormToCard();
   };
 
   #handleFormRollupClick = () => {
-    this.#replaceCardToForm();
+    this.#pointEditComponent.reset(this.#arrPoints);
+    this.#replaceFormToCard();
+  };
+
+  #handleFormResetClick = (point) => {
+    if (this.#mode === Mode.EDIT) {
+      this.#changeData(
+        UserAction.DELETE_POINT,
+        UpdateType.MINOR,
+        point
+      );
+      return;
+    }
+    this.#pointEditComponent.reset(this.#arrPoints);
+    this.#replaceFormToCard();
   };
 
   #handleFormSubmit = (point) => {
-    this.#changeData(point);
+    this.#changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      point
+    );
     this.#replaceFormToCard();
   };
 
   #handleFavoriteClick = () => {
     this.#changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this.#arrPoints,
         {
-          isFinite: !this.#arrPoints.isFinite
+          isFavorite: !this.#arrPoints.isFavorite
         }
       )
     );
