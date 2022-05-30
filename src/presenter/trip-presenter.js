@@ -84,13 +84,12 @@ export default class TripPresenter {
 
   #renderBoard = () => {
     this.#renderSort();
-
     this.#renderList();
   };
 
   #handlePointChange = (updatedPoint) => {
     this.#arrPoints = updateItem(this.#arrPoints, updatedPoint);
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+    this.#pointPresenter[updatedPoint.id].init(updatedPoint);
   };
 
   #handleModeChange = () => {
