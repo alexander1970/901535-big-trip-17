@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { getRandomArr, getRandomElement, getRandomInt, shuffleArr } from '../utils/common.js';
-import { DESTINATIONS, OFFER_TITLES, PLACEHOLDER_TEXT, TYPES } from './consts.js';
+import { DESTINATIONS, OFFER_TITLES, PHOTOS_MAX_COUNT, PHOTOS_MIN_COUNT, PLACEHOLDER_TEXT, TYPES } from './consts.js';
 
 const maxDayGap = 7;
 const OFFERS_MIN_COUNT = 0;
@@ -43,6 +43,21 @@ const generateDescriptionText = () => {
   return description;
 };
 
+const getPhotoUrl = () => `http://picsum.photos/300/200?r=${Math.random()}`;
+
+const getPhotoAlt = () => getRandomElement(PLACEHOLDER_TEXT.split(' '));
+
+const getPhoto = () => ({
+  src: getPhotoUrl(),
+  description: getPhotoAlt(),
+});
+
+const generateDestinationPhotos = () => {
+  const count = getRandomInt(PHOTOS_MIN_COUNT, PHOTOS_MAX_COUNT);
+
+  return new Array(count).fill().map(() => getPhoto());
+};
+
 export const generatePoint = () => {
   const date = generateDateFrom();
 
@@ -56,5 +71,6 @@ export const generatePoint = () => {
     offers: generateEventOffers(),
     type: getRandomElement(TYPES),
     description: generateDescriptionText(),
+    photos: generateDestinationPhotos(),
   };
 };

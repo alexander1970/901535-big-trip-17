@@ -15,14 +15,26 @@ const BLANK_POINT = {
   dateFrom: Date.now(),
   dateTo: Date.now() + 30000,
   isFavorite: false,
+  photos: null,
 };
 
 const renderDestinationText = (description) => `<p class="event__destination-description">${description}</p>`;
 
-const renderDestination = (description, haveDescription) => !haveDescription ? '' : `
+const getPhoto = (photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`;
+
+const renderDestinationPhotos = (photos, havePhotos) => !havePhotos ? '' : `
+  <div class="event__photos-container">
+    <div class="event__photos-tape">
+      ${photos.map(getPhoto).join(' ')}
+    </div>
+  </div>
+`;
+
+const renderDestination = (description, photos, haveDescription, havePhotos) => !haveDescription ? '' : `
   <section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
     ${renderDestinationText(description)}
+    ${renderDestinationPhotos(photos, havePhotos)}
   </section>
 `;
 
@@ -82,12 +94,14 @@ const createEditPointTemplate = (point, isNew) => {
     basePrice,
     offers,
     description,
+    photos,
     haveOffers,
-    haveDescription
+    haveDescription,
+    havePhotos
   } = point;
 
   const offersTemplate = renderOffers(offers, haveOffers);
-  const descriptionTemplate = renderDestination(description, haveDescription);
+  const descriptionTemplate = renderDestination(description, photos, haveDescription, havePhotos);
   const typesListTemplate = TYPES.map((currentType) => getSelectButton(currentType, currentType === type)).join(' ');
 
   return `
@@ -314,22 +328,28 @@ export default class NewEditPointTemplateView extends AbstractStatefulView {
 
   static parsePointToState = (point) => ({...point,
     haveOffers: point.offers.length !== 0,
-    haveDescription: point.description !== ''
+    haveDescription: point.description !== '',
+    havePhotos: point.photos.length !== 0,
   });
 
   static parseStateToPoint = (state) => {
-    const point = {...state};
+    const point = Object.assign({}, state);
 
-    if (!point.haveOffers) {
+    if (!state.haveOffers) {
       point.offers = [];
     }
 
-    if (!point.haveDescription) {
+    if (!state.haveDescription) {
       point.description = '';
+    }
+
+    if (!state.havePhotos) {
+      point.photos = [];
     }
 
     delete point.haveOffers;
     delete point.haveDescription;
+    delete point.havePhotos;
 
     return point;
   };

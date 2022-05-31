@@ -1,3 +1,6 @@
+const PHOTOS_MIN_COUNT = 0;
+const PHOTOS_MAX_COUNT = 5;
+
 const TYPES = [
   'taxi',
   'bus',
@@ -44,4 +47,6 @@ export {
   DESTINATIONS,
   OFFER_TITLES,
   PLACEHOLDER_TEXT,
+  PHOTOS_MIN_COUNT,
+  PHOTOS_MAX_COUNT,
 };
