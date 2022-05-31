@@ -1,7 +1,7 @@
 const FilterType = {
-  EVERYTHING: 'filter-everything',
-  FUTURE: 'filter-future',
-  PAST: 'filter-past',
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PAST: 'past',
 };
 
 const SortType = {

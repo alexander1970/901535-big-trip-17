@@ -1,6 +1,7 @@
 import { SortType } from '../consts';
 import { render } from '../framework/render';
 import { updateItem } from '../utils/common';
+import { filter } from '../utils/filter ';
 import { calcDuration } from '../utils/point';
 import EventsEmpty from '../view/events-empty.js';
 import NewTripListTemplateView from '../view/trip-list-view.js';
@@ -12,20 +13,36 @@ export default class TripPresenter {
   #pointListComponent = new NewTripListTemplateView();
   #listComponent = this.#pointListComponent.element;
 
-  #tripEvents = null;
+  #listContainer = null
+  #pointsModel = null;
+  #filterModel = null
   #pointPresenter = new Map();
   #currentSortType = SortType.DAY;
-  #arrPoints = [];
 
-  constructor(tripEvents) {
-    this.#tripEvents = tripEvents;
+  constructor(listContainer, pointsModel, filterModel) {
+    this.#listContainer = listContainer;
+    this.#pointsModel = pointsModel;
+    this.#filterModel = filterModel;
   }
 
-  init = (arrPoints) => {
-    this.#arrPoints = arrPoints.slice();
+  get points() {
+    const filterType = this.#filterModel.getFilter();
+    const points = this.#pointsModel.getPoints();
+    const filteredPoints = filter[filterType](points);
 
-    render(this.#pointListComponent, this.#tripEvents);
+    switch (this.#currentSortType) {
+      case SortType.DAY:
+        return filteredPoints.sort((a, b) => a.dateFrom - b.dateFrom);
+      case SortType.TIME:
+        return filteredPoints.sort((a, b) => calcDuration(a) - calcDuration(b));
+      case SortType.PRICE:
+        return filteredPoints.sort((a, b) => a.basePrice - b.basePrice);
+      default:
+        return filteredPoints;
+    }
+  }
 
+  init = () => {
     this.#renderBoard();
   };
 
@@ -64,24 +81,6 @@ export default class TripPresenter {
     this.#pointSort.setSortTypeChangeHandler(this.#handleSortTypeChange);
   };
 
-  #sortPoints = (sortType) => {
-    switch (sortType) {
-      case SortType.DAY:
-        this.#arrPoints.sort((a, b) => a.dateFrom - b.dateFrom);
-        break;
-      case SortType.TIME:
-        this.#arrPoints.sort((a, b) => calcDuration(a) - calcDuration(b));
-        break;
-      case SortType.PRICE:
-        this.#arrPoints.sort((a, b) => a.basePrice - b.basePrice);
-        break;
-      default:
-        this.#arrPoints.sort((a, b) => a.dateFrom - b.dateFrom);
-    }
-
-    this.#currentSortType = sortType;
-  };
-
   #renderBoard = () => {
     this.#renderSort();
     this.#renderList();
@@ -103,7 +102,7 @@ export default class TripPresenter {
       return;
     }
 
-    this.#sortPoints(sortType);
+    this.#currentSortType = sortType;
     this.#clearList();
     this.#renderList();
   };
