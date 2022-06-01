@@ -6,16 +6,20 @@ import NewEventButtonView from './view/new-event-button.js';
 import { render } from './framework/render.js';
 import { getSortedPoints } from './utils/sort.js';
 import { SortType } from './consts.js';
+import { TOTAL_EVENTS_COUNT } from './mock/consts.js';
+import { generatePoint } from './mock/point.js';
 
 const pageHeader = document.querySelector('.page-header');
-const tripMainElement = pageHeader.querySelector('.trip-main__trip-info');
-const tripControlsElement = pageHeader.querySelector('.trip-controls__filters');
+// const tripMainElement = pageHeader.querySelector('.trip-main__trip-info');
+// const tripControlsElement = pageHeader.querySelector('.trip-controls__filters');
 const tripMain = pageHeader.querySelector('.trip-main');
 const pageMain = document.querySelector('.page-body__page-main');
 const tripEventsSection = pageMain.querySelector('.trip-events');
 
+const points = new Array(TOTAL_EVENTS_COUNT).fill().map(generatePoint);
+
 const pointModel = new PointModel();
-const pointSorted = getSortedPoints([...pointModel.points], SortType.DAY);
+const pointSorted = getSortedPoints(points, SortType.DAY);
 
 const tripPresenter = new TripPresenter(tripEventsSection);
 

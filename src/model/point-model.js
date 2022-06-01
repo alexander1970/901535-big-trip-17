@@ -1,8 +1,7 @@
 import Observable from '../framework/observable.js';
-// import { generatePoint } from '../mock/point.js';
 
 export default class PointModel extends Observable {
-  #points = []; // Array.from({length: 5}, generatePoint);
+  #points = [];
 
   set points(point) {
     this.#points = point.slice();
