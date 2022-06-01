@@ -1,4 +1,4 @@
-import { SortType } from '../consts';
+import { SortType, UpdateType } from '../consts';
 import { render } from '../framework/render';
 import { updateItem } from '../utils/common';
 import { filter } from '../utils/filter ';
@@ -23,11 +23,13 @@ export default class TripPresenter {
     this.#listContainer = listContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
+
+    this.#pointsModel.addObserver(this.#handleModelPoint);
   }
 
   get points() {
-    const filterType = this.#filterModel.getFilter();
-    const points = this.#pointsModel.getPoints();
+    const filterType = this.#filterModel.filter;
+    const points = this.#pointsModel.points;
     const filteredPoints = filter[filterType](points);
 
     switch (this.#currentSortType) {
@@ -52,8 +54,8 @@ export default class TripPresenter {
     this.#pointPresenter[point.id] = pointPresenter;
   };
 
-  #renderPoints = () => {
-    this.#arrPoints.forEach((item) => this.#renderPoint(item));
+  #renderPoints = (points) => {
+    points.forEach((item) => this.#renderPoint(item));
   };
 
   #renderEmpty = () => {
@@ -89,6 +91,17 @@ export default class TripPresenter {
   #handlePointChange = (updatedPoint) => {
     this.#arrPoints = updateItem(this.#arrPoints, updatedPoint);
     this.#pointPresenter[updatedPoint.id].init(updatedPoint);
+  };
+
+  #handleModelPoint = (updateType, data) => {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#pointPresenter[data.id].init(data);
+        break;
+      case UpdateType.MINOR:
+        this.
+        break;
+    }
   };
 
   #handleModeChange = () => {

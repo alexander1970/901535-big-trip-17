@@ -3,20 +3,9 @@ import flatpickr from 'flatpickr';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { TYPES } from '../mock/consts.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
+import { BLANK_POINT } from '../consts.js';
 
 import 'flatpickr/dist/flatpickr.min.css';
-
-const BLANK_POINT = {
-  type: 'taxi',
-  destination: '',
-  description: '',
-  offers: [],
-  basePrice: 0,
-  dateFrom: Date.now(),
-  dateTo: Date.now() + 30000,
-  isFavorite: false,
-  photos: null,
-};
 
 const renderDestinationText = (description) => `<p class="event__destination-description">${description}</p>`;
 

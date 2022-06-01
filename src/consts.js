@@ -28,10 +28,23 @@ const UpdateType = {
   MAJOR: 'MAJOR'
 };
 
+const BLANK_POINT = {
+  type: 'taxi',
+  destination: '',
+  description: '',
+  offers: [],
+  basePrice: 0,
+  dateFrom: Date.now(),
+  dateTo: Date.now() + 30000,
+  isFavorite: false,
+  photos: null,
+};
+
 export {
   FilterType,
   SortType,
   Mode,
   UserAction,
-  UpdateType
+  UpdateType,
+  BLANK_POINT
 };
