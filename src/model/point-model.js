@@ -3,7 +3,7 @@ import Observable from '../framework/observable.js';
 export default class PointModel extends Observable {
   #points = [];
 
-  set points(point) {
+  setPoints(point) {
     this.#points = point.slice();
   }
 

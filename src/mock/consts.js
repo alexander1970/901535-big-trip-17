@@ -1,4 +1,4 @@
-const TOTAL_EVENTS_COUNT = 27;
+const TOTAL_EVENTS_COUNT = 7;
 const PHOTOS_MIN_COUNT = 0;
 const PHOTOS_MAX_COUNT = 5;
 

@@ -24,7 +24,7 @@ const pointSorted = getSortedPoints(arrPoints, SortType.DAY);
 const pointModel = new PointModel();
 const filterModel = new Filter();
 const siteControls = new SiteControls();
-pointModel.points(pointSorted);
+pointModel.setPoints(pointSorted);
 
 const tripPresenter = new TripPresenter(tripEventsSection, pointModel, filterModel);
 const filterPresenter = new Filters(siteControls, pointModel, filterModel);
