@@ -3,16 +3,13 @@ import { remove, render } from '../framework/render';
 import { filter } from '../utils/filter ';
 import { calcDuration } from '../utils/point';
 import EventsEmpty from '../view/events-empty';
-import NewTripListTemplateView from '../view/trip-list-view';
 import NewTripSortTemplateView from '../view/trip-sort-view';
 import PointAddPresenter from './point-add-presenter';
 import PointPresenter from './point-presenter';
 
 export default class TripPresenter {
   #pointEmpty = new EventsEmpty();
-  #pointListComponent = new NewTripListTemplateView();
-  #listComponent = this.#pointListComponent.element;
-  #pointAddPresenter = new PointAddPresenter(this.#listComponent, this.#handleViewAction);
+  #pointAddPresenter = new PointAddPresenter(this.#listContainer, this.#handleViewAction);
 
   #listContainer = null;
   #pointsModel = null;
@@ -51,7 +48,7 @@ export default class TripPresenter {
   };
 
   #renderPoint = (point) => {
-    const pointPresenter = new PointPresenter(this.#listComponent, this.#handleViewAction, this.#handleModeChange);
+    const pointPresenter = new PointPresenter(this.#listContainer, this.#handleViewAction, this.#handleModeChange);
     pointPresenter.init(point);
     this.#pointPresenter[point.id] = pointPresenter;
   };
@@ -61,11 +58,11 @@ export default class TripPresenter {
   };
 
   #renderEmpty = () => {
-    render(new EventsEmpty(), this.#listComponent);
+    render(new EventsEmpty(), this.#listContainer);
   };
 
   #renderList = () => {
-    render(this.#listComponent, this.#pointListComponent);
+    render(this.#listContainer, this.#pointListComponent);
   };
 
   #renderBoard = () => {
