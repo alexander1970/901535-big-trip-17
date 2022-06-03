@@ -1,6 +1,5 @@
 import { FilterType, SortType, UpdateType, UserAction } from '../consts';
 import { remove, render } from '../framework/render';
-import { filter } from '../utils/filter ';
 import { calcDuration } from '../utils/point';
 import EventsEmpty from '../view/events-empty';
 import PointList from '../view/point-list';
@@ -26,23 +25,23 @@ export default class TripPresenter {
     this.#filterModel = filterModel;
 
     this.#pointsModel.addObserver(this.#handleModelPoint);
-    this.#filterModel.addObserver(this.#handleModelPoint);
+    // this.#filterModel.addObserver(this.#handleModelPoint);
   }
 
   get points() {
-    const filterType = this.#filterModel.filter;
-    const points = this.#pointsModel.points;
-    const filteredPoints = filter[filterType](points);
+    // const filterType = this.#filterModel.filter;
+    const points = [...this.#pointsModel.points];
+    // const filteredPoints = filter[filterType](points);
 
     switch (this.#currentSortType) {
       case SortType.DAY:
-        return filteredPoints.sort((a, b) => a.dateFrom - b.dateFrom);
+        return points.sort((a, b) => a.dateFrom - b.dateFrom);
       case SortType.TIME:
-        return filteredPoints.sort((a, b) => calcDuration(a) - calcDuration(b));
+        return points.sort((a, b) => calcDuration(a) - calcDuration(b));
       case SortType.PRICE:
-        return filteredPoints.sort((a, b) => a.basePrice - b.basePrice);
+        return points.sort((a, b) => a.basePrice - b.basePrice);
       default:
-        return filteredPoints;
+        return points;
     }
   }
 
@@ -57,9 +56,9 @@ export default class TripPresenter {
   };
 
   #renderPoint = (point) => {
-    const pointPresenter = new PointPresenter(this.#pointList, this.#handleViewAction, this.#handleModeChange);
+    const pointPresenter = new PointPresenter(this.#pointList.element, this.#handleViewAction, this.#handleModeChange);
     pointPresenter.init(point);
-    this.#pointPresenter[point.id] = pointPresenter;
+    this.#pointPresenter.set(point.id, pointPresenter);
   };
 
   #renderPoints = (points) => {
@@ -71,7 +70,7 @@ export default class TripPresenter {
   };
 
   #renderList = () => {
-    render(this.#listContainer, this.#pointList);
+    render(this.#pointList, this.#listContainer);
   };
 
   #renderBoard = () => {
@@ -110,7 +109,7 @@ export default class TripPresenter {
     this.#pointSort = new NewTripSortTemplateView(this.#currentSortType);
     this.#pointSort.setSortTypeChangeHandler(this.#handleSortTypeChange);
 
-    render(this.#pointSort, this.#pointList);
+    render(this.#pointSort, this.#listContainer);
   };
 
   #handleViewAction = (actionType, updateType, update) => {
@@ -129,7 +128,7 @@ export default class TripPresenter {
   #handleModelPoint = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#pointPresenter[data.id].init(data);
+        this.#pointPresenter.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
         this.#clearBoard();

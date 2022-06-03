@@ -5,8 +5,6 @@ import NewEventButtonView from './view/new-event-button.js';
 import { render } from './framework/render.js';
 import { getSortedPoints } from './utils/sort.js';
 import { SortType } from './consts.js';
-import { TOTAL_EVENTS_COUNT } from './mock/consts.js';
-import { generatePoint } from './mock/point.js';
 import Filter from './model/filter-model.js';
 import Filters from './presenter/filter-presenter.js';
 import SiteControls from './view/site-controls.js';
@@ -18,13 +16,10 @@ const tripMain = pageHeader.querySelector('.trip-main');
 const pageMain = document.querySelector('.page-body__page-main');
 const tripEventsSection = pageMain.querySelector('.trip-events');
 
-const arrPoints = new Array(TOTAL_EVENTS_COUNT).fill().map(generatePoint);
-const pointSorted = getSortedPoints(arrPoints, SortType.DAY);
-
 const pointModel = new PointModel();
+const pointSorted = getSortedPoints([...pointModel.points], SortType.DAY);
 const filterModel = new Filter();
 const siteControls = new SiteControls();
-pointModel.setPoints(pointSorted);
 
 const tripPresenter = new TripPresenter(tripEventsSection, pointModel, filterModel);
 const filterPresenter = new Filters(siteControls, pointModel, filterModel);

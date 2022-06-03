@@ -4,7 +4,7 @@ import NewEditPointTemplateView from '../view/trip-edit-point-view.js';
 import NewTripListPointTemplateView from '../view/trip-list-point-view.js';
 
 export default class PointPresenter {
-  #tripEvents = null;
+  #pointsContainer = null;
   #changeData = null;
   #changeMode = null;
 
@@ -14,8 +14,8 @@ export default class PointPresenter {
 
   #arrPoints = [];
 
-  constructor(tripEvents, changeData, changeMode) {
-    this.#tripEvents = tripEvents;
+  constructor(pointsContainer, changeData, changeMode) {
+    this.#pointsContainer = pointsContainer;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
   }
@@ -36,7 +36,7 @@ export default class PointPresenter {
     this.#pointEditComponent.setResetButtonClickHandler(this.#handleFormResetClick);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
-      render(this.#pointComponent, this.#tripEvents);
+      render(this.#pointComponent, this.#pointsContainer);
       return;
     }
 
@@ -119,13 +119,7 @@ export default class PointPresenter {
     this.#changeData(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
-      Object.assign(
-        {},
-        this.#arrPoints,
-        {
-          isFavorite: !this.#arrPoints.isFavorite
-        }
-      )
+      {...this.#arrPoints, isFavorite: !this.#arrPoints.isFavorite},
     );
   };
 }
