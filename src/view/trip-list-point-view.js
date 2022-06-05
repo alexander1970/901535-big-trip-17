@@ -29,7 +29,7 @@ const createListPointTemplate = (point) => {
           <p class="event__time">
             <time class="event__start-time" datetime="${dayjs(dateFrom).format('YYYY-MM-DD HH:mm')}">${dayjs(dateFrom).format('HH:mm')}</time>
             &mdash;
-            <time class="event__end-time" datetime="${dayjs(dateTo).format('YYYY-MM-DD HH:mm')}>${dayjs(dateTo).format('HH:mm')}</time>
+            <time class="event__end-time" datetime="${dayjs(dateTo).format('YYYY-MM-DD HH:mm')}">${dayjs(dateTo).format('HH:mm')}</time>
           </p>
           <p class="event__duration">
             ${getDuration(dateFrom, dateTo)}

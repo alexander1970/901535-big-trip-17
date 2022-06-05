@@ -54,9 +54,9 @@ const createAboutTripTemplate = (points) => !points.length ? `
 export default class NewAboutTripTemplate extends AbstractView {
   #points = null;
 
-  constructor(points) {
+  constructor(pointModel) {
     super();
-    this.#points = points;
+    this.#points = [...pointModel.points];
   }
 
   get template() {

@@ -186,7 +186,8 @@ main {
 
 .trip-main__trip-info {
   width: 100%;
-  margin-bottom: 35px; }
+  /* margin-bottom: 35px;  */
+}
 
 .trip-main__trip-controls {
   margin-top: 36px;
