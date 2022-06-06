@@ -17,8 +17,9 @@ const tripEventsSection = pageMain.querySelector('.trip-events');
 
 const pointModel = new PointModel();
 const filterModel = new FilterModel();
+const siteControls = new SiteControls();
 const tripPresenter = new TripPresenter(tripEventsSection, pointModel, filterModel);
-const filterPresenter = new FilterPresenter(new SiteControls(), filterModel, pointModel);
+const filterPresenter = new FilterPresenter(siteControls, filterModel, pointModel);
 
 render(new NewAboutTripTemplate(pointModel), tripMainElement);
 render(new NewTripFiltersTemplateView(), tripControlsElement);
