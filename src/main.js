@@ -1,4 +1,5 @@
 import { render } from './framework/render.js';
+import { FilterType } from './consts.js';
 import NewAboutTripTemplate from './view/trip-info-view.js';
 import TripPresenter from './presenter/trip-presenter.js';
 import PointModel from './model/point-model.js';
@@ -22,7 +23,7 @@ const tripPresenter = new TripPresenter(tripEventsSection, pointModel, filterMod
 const filterPresenter = new FilterPresenter(siteControls, filterModel, pointModel);
 
 render(new NewAboutTripTemplate(pointModel), tripMainElement);
-render(new NewTripFiltersTemplateView(), tripControlsElement);
+render(new NewTripFiltersTemplateView(FilterType.EVERYTHING), tripControlsElement);
 render(new NewEventButtonView(), tripMain);
 
 tripPresenter.init();
