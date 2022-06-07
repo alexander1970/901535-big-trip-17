@@ -5,7 +5,7 @@ import { calcDuration } from '../utils/point';
 import EventsEmpty from '../view/events-empty';
 import PointList from '../view/point-list';
 import NewTripSortTemplateView from '../view/trip-sort-view';
-// import PointAddPresenter from './point-add-presenter';
+import PointAddPresenter from './point-add-presenter';
 import PointPresenter from './point-presenter';
 
 export default class TripPresenter {
@@ -17,13 +17,15 @@ export default class TripPresenter {
   #pointList = new PointList();
   #pointEmpty = new EventsEmpty();
   #pointPresenter = new Map();
-  // #pointAddPresenter = new PointAddPresenter(this.#pointList, this.#handleViewAction);
+  #pointAddPresenter = new Map();
   #currentSortType = SortType.DAY;
 
   constructor(listContainer, pointsModel, filterModel) {
     this.#listContainer = listContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
+
+    this.#pointAddPresenter = new PointAddPresenter(this.#pointList, this.#handleViewAction);
 
     this.#pointsModel.addObserver(this.#handleModelPoint);
     this.#filterModel.addObserver(this.#handleModelPoint);
@@ -53,13 +55,13 @@ export default class TripPresenter {
   createPoint = () => {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    // this.#pointAddPresenter.init();
+    this.#pointAddPresenter.init();
   };
 
   #renderPoint = (point) => {
     const pointPresenter = new PointPresenter(this.#pointList.element, this.#handleViewAction, this.#handleModeChange);
     pointPresenter.init(point);
-    // this.#pointPresenter.set(point.id, pointPresenter);
+    this.#pointPresenter.set(point.id, pointPresenter);
     this.#pointPresenter[point.id] = pointPresenter;
   };
 
@@ -89,7 +91,7 @@ export default class TripPresenter {
   };
 
   #clearBoard = ({resetSortType = false} = {}) => {
-    // this.#pointAddPresenter.destroy();
+    this.#pointAddPresenter.destroy();
 
     Object
       .values(this.#pointPresenter)
@@ -144,7 +146,7 @@ export default class TripPresenter {
   };
 
   #handleModeChange = () => {
-    // this.#pointAddPresenter.destroy();
+    this.#pointAddPresenter.destroy();
 
     Object
       .values(this.#pointPresenter)
