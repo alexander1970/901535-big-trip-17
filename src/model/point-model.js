@@ -2,7 +2,17 @@ import Observable from '../framework/observable';
 import { generatePoint } from '../mock/point';
 
 export default class PointModel extends Observable {
+  #pointsApiService = null;
   #points = Array.from({length: 5}, generatePoint);
+
+  constructor(pointsApiService) {
+    super();
+    this.#pointsApiService = pointsApiService;
+
+    this.#pointsApiService.points.then((points) => {
+
+    });
+  }
 
   get points() {
     return this.#points;
