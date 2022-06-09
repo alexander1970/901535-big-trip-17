@@ -8,6 +8,10 @@ import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import SiteControls from './view/site-controls.js';
 import NewTripFiltersTemplateView from './view/trip-filters-view.js';
+import PointsApiService from './points-api-service.js';
+
+const AUTHORIZATION = 'basic mcb12jjklkvfi';
+const END_POINT = 'https://17.ecmascript.pages.academy/big-trip/points';
 
 const pageHeader = document.querySelector('.page-header');
 const tripMainElement = pageHeader.querySelector('.trip-main__trip-info');
@@ -16,7 +20,7 @@ const tripMain = pageHeader.querySelector('.trip-main');
 const pageMain = document.querySelector('.page-body__page-main');
 const tripEventsSection = pageMain.querySelector('.trip-events');
 
-const pointModel = new PointModel();
+const pointModel = new PointModel(new PointsApiService(END_POINT, AUTHORIZATION));
 const filterModel = new FilterModel();
 const siteControls = new SiteControls();
 const tripPresenter = new TripPresenter(tripEventsSection, pointModel, filterModel);

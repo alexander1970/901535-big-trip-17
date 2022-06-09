@@ -2,7 +2,18 @@ import Observable from '../framework/observable';
 import { generatePoint } from '../mock/point';
 
 export default class PointModel extends Observable {
+  #pointsApiService = null;
   #points = Array.from({length: 5}, generatePoint);
+
+  constructor(pointsApiService) {
+    super();
+    this.#pointsApiService = pointsApiService;
+
+    this.#pointsApiService.points.then((points) => {
+      // console.log(points);
+      console.log(points.map(this.#adaptToClient));
+    });
+  }
 
   get points() {
     return this.#points;
@@ -46,5 +57,25 @@ export default class PointModel extends Observable {
     ];
 
     this._notify(updateType);
+  };
+
+  #adaptToClient = (point) => {
+    const adaptedPoint = {...point,
+      destination: point.destination.name,
+      description: point.description.description,
+      photos: point.destination.pictures,
+      basePprice: point.base_price,
+      dateFrom: new Date(point.date_from),
+      dateTo: new Date(point.date_to),
+      isFavorite: point.is_favorite,
+    };
+
+    delete adaptedPoint.city;
+    delete adaptedPoint.base_price;
+    delete adaptedPoint.date_from;
+    delete adaptedPoint.date_to;
+    delete adaptedPoint.is_favorite;
+
+    return adaptedPoint;
   };
 }
