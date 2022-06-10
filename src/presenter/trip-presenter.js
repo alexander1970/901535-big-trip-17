@@ -3,6 +3,7 @@ import { remove, render } from '../framework/render';
 import { filter } from '../utils/filter ';
 import { calcDuration } from '../utils/point';
 import EventsEmpty from '../view/events-empty';
+import LoadingView from '../view/loading-view';
 import PointList from '../view/point-list';
 import NewTripSortTemplateView from '../view/trip-sort-view';
 import PointAddPresenter from './point-add-presenter';
@@ -16,6 +17,7 @@ export default class TripPresenter {
 
   #pointList = new PointList();
   #pointEmpty = new EventsEmpty();
+  #loadingComponent = new LoadingView();
   #pointPresenter = new Map();
   #pointAddPresenter = new Map();
   #currentSortType = SortType.DAY;
