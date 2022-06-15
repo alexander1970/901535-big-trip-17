@@ -11,16 +11,17 @@ const createFilterItemTemplate = (filter, currentFilterType) => {
         class="trip-filters__filter-input  visually-hidden"
         name="trip-filter"
         ${currentFilterType === type ? 'checked' : ''}
-        value="${type}"
+        value="${name}"
       />
       <label class="trip-filters__filter-label" for="filter-${name}">${name}</label>
-    </div>`;
+    </div>
+  `;
 };
 
 const createFilterTemplate = (filterItems, currentFilterType) => {
   const filterItemsTemplate = filterItems
     .map((filter) => createFilterItemTemplate(filter, currentFilterType))
-    .join('');
+    .join(' ');
 
   return `
     <form class="trip-filters" action="#" method="get">
