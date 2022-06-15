@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { TYPES } from '../mock/consts.js';
-import { capitalizeFirstLetter } from '../utils/common.js';
+import { capitalizeFirstLetter } from '../utils/common.js';  // ?
 import { BLANK_POINT } from '../consts.js';
 
 import 'flatpickr/dist/flatpickr.min.css';

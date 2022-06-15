@@ -1,13 +1,12 @@
-import {  UpdateType } from '../consts';
+import {  FilterType, UpdateType } from '../consts';
 import { remove, render, replace } from '../framework/render';
-import NewTripFiltersTemplateView from '../view/trip-filters-view';
+import FiltersView from '../view/filters-view';
 
 export default class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #pointsModel = null;
 
-  #currentFilter = null;
   #filterComponent = null;
 
   constructor(filterContainer, filterModel, pointsModel) {
@@ -19,12 +18,28 @@ export default class FilterPresenter {
     this.#pointsModel.addObserver(this.#modelEventHandler);
   }
 
+  get filters() {
+    return [
+      {
+        type: FilterType.EVERYTHING,
+        name: 'everything',
+      },
+      {
+        type: FilterType.FUTURE,
+        name: 'future',
+      },
+      {
+        type: FilterType.PAST,
+        name: 'past'
+      }
+    ];
+  }
+
   init = () => {
+    const filters = this.filters;
     const prevFilterComponent = this.#filterComponent;
 
-    this.#currentFilter = this.#filterModel.filter;
-
-    this.#filterComponent = new NewTripFiltersTemplateView(this.#currentFilter);
+    this.#filterComponent = new FiltersView(filters, this.#filterModel.filter);
     this.#filterComponent.setFilterTypeChangeHandler(this.#filterTypeChangeHandler);
 
     if (prevFilterComponent === null) {
@@ -41,7 +56,7 @@ export default class FilterPresenter {
   };
 
   #filterTypeChangeHandler = (filterType) => {
-    if (this.#currentFilter !== filterType) {
+    if (this.#filterModel.filter !== filterType) {
       this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
     }
   };
