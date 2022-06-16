@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import AbstractView from '../framework/view/abstract-view.js';
 import { generateOffers } from '../mock/offers.js';
-import { capitalizeFirstLetter } from '../utils/common.js';
+import { capitalizeFirstLetter } from '../utils/common.js'; // ?
 import { getDuration } from '../utils/point.js';
 
 const createListPointTemplate = (point) => {

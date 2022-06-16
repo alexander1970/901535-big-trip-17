@@ -27,7 +27,7 @@ render(new NewEventButtonView(), tripMain);
 
 tripPresenter.init();
 filterPresenter.init();
-// pointModel.init();
+pointModel.init();
 
 document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
   evt.preventDefault();
