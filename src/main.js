@@ -5,7 +5,7 @@ import PointModel from './model/point-model.js';
 import NewEventButtonView from './view/new-event-button.js';
 import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
-import SiteControls from './view/site-controls.js';
+// import SiteControls from './view/site-controls.js';
 import PointsApiService from './points-api-service.js';
 
 const AUTHORIZATION = 'basic mcb12jjklkvfi';
@@ -19,10 +19,11 @@ const tripEventsSection = pageMain.querySelector('.trip-events');
 const pointModel = new PointModel(new PointsApiService(END_POINT, AUTHORIZATION));
 const filterModel = new FilterModel();
 
-const siteControls = new SiteControls();
+const siteControls = pageMain.querySelector('.trip-controls__filters'); // new SiteControls();
 const tripPresenter = new TripPresenter(tripEventsSection, pointModel, filterModel);
 const filterPresenter = new FilterPresenter(siteControls, filterModel, pointModel);
 
+// render(siteControls, tripMain);
 render(new NewAboutTripTemplate(pointModel), tripMain);
 render(new NewEventButtonView(), tripMain);
 
