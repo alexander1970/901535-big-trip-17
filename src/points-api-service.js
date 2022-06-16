@@ -13,36 +13,36 @@ export default class PointsApiService extends ApiService {
 
   updatePoint = async (point) => {
     const response = await this._load({
-      url: `poitns/${point.id}`,
+      url: `points/${point.id}`,
       method: Method.PUT,
-      body: JSON.stringify(this.#adaptToServer(point)),
+      body: JSON.stringify(point),  // this.#adaptToServer(point)
       headers: new Headers({'Content-Type': 'application/json'}),
     });
 
     return await ApiService.parseResponse(response);
   };
 
-  #adaptToServer = (point) => {
-    const adaptedPoint = {...point,
-      'base_price': point.price,
-      'date_from': point.dateFrom instanceof Date ? point.dateFrom.toISOStrihg() : null,
-      'date_to': point.dateTo instanceof Date ? point.dateTo.toISOStrihg() : null,
-      'is_favorite': point.isFavorite,
-      'destination': {
-        name: point.destination,
-        description: point.destination,
-        pictures: point.point.photos,
-      }
-    };
+  // #adaptToServer = (point) => {
+  //   const adaptedPoint = {...point,
+  //     'base_price': point.price,
+  //     'date_from': point.dateFrom instanceof Date ? point.dateFrom.toISOStrihg() : null,
+  //     'date_to': point.dateTo instanceof Date ? point.dateTo.toISOStrihg() : null,
+  //     'is_favorite': point.isFavorite,
+  //     'destination': {
+  //       name: point.destination,
+  //       description: point.destination,
+  //       pictures: point.point.photos,
+  //     }
+  //   };
 
-    delete adaptedPoint.destination;
-    delete adaptedPoint.description;
-    delete adaptedPoint.photos;
-    delete adaptedPoint.price;
-    delete adaptedPoint.dateFrom;
-    delete adaptedPoint.dateTo;
-    delete adaptedPoint.isFavorite;
+  //   delete adaptedPoint.destination;
+  //   delete adaptedPoint.description;
+  //   delete adaptedPoint.photos;
+  //   delete adaptedPoint.price;
+  //   delete adaptedPoint.dateFrom;
+  //   delete adaptedPoint.dateTo;
+  //   delete adaptedPoint.isFavorite;
 
-    return adaptedPoint;
-  };
+  //   return adaptedPoint;
+  // };
 }

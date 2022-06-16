@@ -1,4 +1,4 @@
-import { UpdateType } from '../consts';
+// import { UpdateType } from '../consts';
 import Observable from '../framework/observable';
 
 export default class PointModel extends Observable {
@@ -8,23 +8,27 @@ export default class PointModel extends Observable {
   constructor(pointsApiService) {
     super();
     this.#pointsApiService = pointsApiService;
+
+    this.#pointsApiService.points.then((points) => {
+      console.log(points);
+    });
   }
 
   get points() {
     return this.#points;
   }
 
-  init = async () => {
-    try {
-      const points = await this.#pointsApiService.points;
-      this.#points = points.map(this.#adaptToClient);
-      // console.log(this.#points);
-    } catch (error) {
-      this.#points = [];
-    }
+  // init = async () => {
+  //   try {
+  //     const points = await this.#pointsApiService.points;
+  //     this.#points = points.map(this.#adaptToClient);
+  //     // console.log(this.#points);
+  //   } catch (error) {
+  //     this.#points = [];
+  //   }
 
-    this._notify(UpdateType.INIT);
-  };
+  //   this._notify(UpdateType.INIT);
+  // };
 
   updatePoint = (updateType, update) => {
     const index = this.#points.findIndex((point) => point.id === update.id);
@@ -66,23 +70,23 @@ export default class PointModel extends Observable {
     this._notify(updateType);
   };
 
-  #adaptToClient = (point) => {
-    const adaptedPoint = {...point,
-      destination: point.destination.name,
-      description: point.description.description,
-      photos: point.destination.pictures,
-      basePprice: point.base_price,
-      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
-      dateTo: point['date_to'] !== null ? new Date(point['date_to']) : point['date_to'],
-      isFavorite: point.is_favorite,
-    };
+  // #adaptToClient = (point) => {
+  //   const adaptedPoint = {...point,
+  //     destination: point.destination.name,
+  //     description: point.description.description,
+  //     photos: point.destination.pictures,
+  //     basePprice: point.base_price,
+  //     dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
+  //     dateTo: point['date_to'] !== null ? new Date(point['date_to']) : point['date_to'],
+  //     isFavorite: point.is_favorite,
+  //   };
 
-    delete adaptedPoint.city;
-    delete adaptedPoint.base_price;
-    delete adaptedPoint.date_from;
-    delete adaptedPoint.date_to;
-    delete adaptedPoint.is_favorite;
+  //   delete adaptedPoint.city;
+  //   delete adaptedPoint.base_price;
+  //   delete adaptedPoint.date_from;
+  //   delete adaptedPoint.date_to;
+  //   delete adaptedPoint.is_favorite;
 
-    return adaptedPoint;
-  };
+  //   return adaptedPoint;
+  // };
 }
