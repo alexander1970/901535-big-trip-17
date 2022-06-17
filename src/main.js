@@ -2,7 +2,7 @@ import { render } from './framework/render.js';
 import NewAboutTripTemplate from './view/trip-info-view.js';
 import TripPresenter from './presenter/trip-presenter.js';
 import PointModel from './model/point-model.js';
-import NewEventButtonView from './view/new-event-button.js';
+import NewPointButtonView from './view/new-point-button.js';
 import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import PointsApiService from './points-api-service.js';
@@ -18,18 +18,25 @@ const tripEventsSection = pageMain.querySelector('.trip-events');
 
 const pointModel = new PointModel(new PointsApiService(END_POINT, AUTHORIZATION));
 const filterModel = new FilterModel();
-
 const tripPresenter = new TripPresenter(tripEventsSection, pointModel, filterModel);
 const filterPresenter = new FilterPresenter(siteControls, filterModel, pointModel);
+const newPointButtonComponent = new NewPointButtonView();
+
+const handleNewPointFormClose = () => {
+  newPointButtonComponent.element.disabled = false;
+};
+
+const handleNewPointButtonClick = () => {
+  tripPresenter.createPoint(handleNewPointFormClose);
+  newPointButtonComponent.element.disabled = true;
+};
 
 render(new NewAboutTripTemplate(pointModel), tripMain);
-render(new NewEventButtonView(), tripMain);
 
-tripPresenter.init();
 filterPresenter.init();
-pointModel.init();
-
-document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
-  evt.preventDefault();
-  tripPresenter.createEvent();
-});
+tripPresenter.init();
+pointModel.init()
+  .finally(() => {
+    render(newPointButtonComponent, tripMain);
+    newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
+  });
