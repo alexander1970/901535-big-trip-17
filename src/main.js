@@ -16,27 +16,29 @@ const tripMain = pageHeader.querySelector('.trip-main');
 const siteControls = pageHeader.querySelector('.trip-controls__filters');
 const tripEventsSection = pageMain.querySelector('.trip-events');
 
-const pointModel = new PointModel(new PointsApiService(END_POINT, AUTHORIZATION));
+const apiServer = new PointsApiService(END_POINT, AUTHORIZATION);
+const pointModel = new PointModel(apiServer);
 const filterModel = new FilterModel();
-const tripPresenter = new TripPresenter(tripEventsSection, pointModel, filterModel);
+const tripPresenter = new TripPresenter(tripEventsSection, pointModel, filterModel, apiServer);
 const filterPresenter = new FilterPresenter(siteControls, filterModel, pointModel);
 const newPointButtonComponent = new NewPointButtonView();
 
-const handleNewPointFormClose = () => {
-  newPointButtonComponent.element.disabled = false;
-};
+// const handleNewPointFormClose = () => {
+//   newPointButtonComponent.element.disabled = false;
+// };
 
-const handleNewPointButtonClick = () => {
-  tripPresenter.createPoint(handleNewPointFormClose);
-  newPointButtonComponent.element.disabled = true;
-};
+// const handleNewPointButtonClick = () => {
+//   tripPresenter.createPoint(handleNewPointFormClose);
+//   newPointButtonComponent.element.disabled = true;
+// };
 
 render(new NewAboutTripTemplate(pointModel), tripMain);
+render(newPointButtonComponent, tripMain);
 
 filterPresenter.init();
 tripPresenter.init();
-pointModel.init()
-  .finally(() => {
-    render(newPointButtonComponent, tripMain);
-    newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
-  });
+pointModel.init();
+// .finally(() => {
+//   render(newPointButtonComponent, tripMain);
+//   newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
+// });

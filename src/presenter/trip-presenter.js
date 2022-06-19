@@ -13,6 +13,8 @@ export default class TripPresenter {
   #listContainer = null;
   #pointsModel = null;
   #filterModel = null;
+  #apiServer = new Map();
+
   #pointSort = null;
 
   #pointList = new PointList();
@@ -24,10 +26,11 @@ export default class TripPresenter {
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
 
-  constructor(listContainer, pointsModel, filterModel) {
+  constructor(listContainer, pointsModel, filterModel, apiServer) {
     this.#listContainer = listContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
+    this.#apiServer = apiServer;
 
     this.#pointAddPresenter = new PointAddPresenter(this.#pointList, this.#handleViewAction);
 
@@ -64,8 +67,11 @@ export default class TripPresenter {
 
   #renderPoint = (point) => {
     const pointPresenter = new PointPresenter(this.#pointList.element, this.#handleViewAction, this.#handleModeChange);
-    pointPresenter.init(point);
-    this.#pointPresenter.set(point.id, pointPresenter);
+    const destinations = this.#apiServer.destinations;
+    const offers = this.#apiServer.offers;
+
+    pointPresenter.init(point, destinations, offers);
+    // this.#pointPresenter.set(point.id, pointPresenter);
     this.#pointPresenter[point.id] = pointPresenter;
   };
 
@@ -145,6 +151,7 @@ export default class TripPresenter {
   };
 
   #handleModelPoint = (updateType, data) => {
+    // console.log(updateType);
     switch (updateType) {
       case UpdateType.PATCH:
         this.#pointPresenter.get(data.id).init(data);

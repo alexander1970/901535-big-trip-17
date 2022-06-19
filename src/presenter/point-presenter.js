@@ -20,14 +20,14 @@ export default class PointPresenter {
     this.#changeMode = changeMode;
   }
 
-  init = (arrPoints) => {
+  init = (arrPoints, destinations, offers) => {
     this.#arrPoints = arrPoints;
 
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 
     this.#pointComponent = new NewTripListPointTemplateView(this.#arrPoints);
-    this.#pointEditComponent = new NewEditPointTemplateView(this.#arrPoints);
+    this.#pointEditComponent = new NewEditPointTemplateView(this.#arrPoints, destinations, offers);
 
     this.#pointComponent.setPointRollupButtonClickHandler(this.#handlePointRollupClick);
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
