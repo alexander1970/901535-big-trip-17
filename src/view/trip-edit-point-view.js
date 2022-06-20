@@ -100,10 +100,11 @@ const createEditPointTemplate = (point, destinations, typedOffers, isNew) => {
     onDeleting,
     isDisabled,
   } = point;
-  console.log('type=', type);
-  console.log('typedOffers=', typedOffers);
+  console.log('type =', type);
+  console.log('typedOffers =', typedOffers);
 
   const selectedTypeOffers = typedOffers.find((item) => item.type === type).offers;
+  console.log('selectedTypeOffers =', selectedTypeOffers);
   const offersTemplate = renderOffers(offers, selectedTypeOffers, isDisabled);
   const descriptionTemplate = renderDestination(description, photos);
   const typesListTemplate = TYPES.map((currentType) => getSelectButton(currentType, currentType === type)).join(' ');
@@ -349,18 +350,6 @@ export default class NewEditPointTemplateView extends AbstractStatefulView {
 
   static parseStateToPoint = (state) => {
     const point = Object.assign({}, state);
-
-    if (!state.haveOffers) {
-      point.offers = [];
-    }
-
-    if (!state.haveDescription) {
-      point.description = '';
-    }
-
-    if (!state.havePhotos) {
-      point.photos = [];
-    }
 
     delete point.onSaving;
     delete point.onDeleting;
