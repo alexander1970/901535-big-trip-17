@@ -65,10 +65,10 @@ export default class TripPresenter {
     this.#pointAddPresenter.init();
   };
 
-  #renderPoint = (point) => {
+  #renderPoint = async (point) => {
     const pointPresenter = new PointPresenter(this.#pointList.element, this.#handleViewAction, this.#handleModeChange);
-    const destinations = this.#apiServer.destinations;
-    const offers = this.#apiServer.offers;
+    const destinations = await this.#apiServer.destinations;
+    const offers = await this.#apiServer.offers;
 
     pointPresenter.init(point, destinations, offers);
     // this.#pointPresenter.set(point.id, pointPresenter);
@@ -134,7 +134,7 @@ export default class TripPresenter {
     this.#pointSort = new NewTripSortTemplateView(this.#currentSortType);
     this.#pointSort.setSortTypeChangeHandler(this.#handleSortTypeChange);
 
-    render(this.#pointSort, this.#listContainer);
+    render(this.#pointSort, this.#listContainer, RenderPosition.AFTERBEGIN);
   };
 
   #handleViewAction = (actionType, updateType, update) => {

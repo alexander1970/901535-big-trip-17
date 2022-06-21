@@ -1,8 +1,32 @@
 import dayjs from 'dayjs';
 import AbstractView from '../framework/view/abstract-view.js';
-import { generateOffers } from '../mock/offers.js';
 import { capitalizeFirstLetter } from '../utils/common.js'; // ?
 import { getDuration } from '../utils/point.js';
+
+const getOfferTemplate = (offer) => {
+  const {title, cost} = offer;
+
+  return `
+    <li class="event__offer">
+      <span class="event__offer-title">${title}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${cost}</span>
+    </li>
+  `;
+};
+
+const generateOffers = (offers) => {
+  const offersList = offers.reduce((acc, element) => {
+    acc += getOfferTemplate(element);
+    return  acc;
+  }, '');
+
+  return `
+    <ul class="event__selected-offers">
+      ${offersList}
+    </ul>
+  `;
+};
 
 const createListPointTemplate = (point) => {
   const {
@@ -14,6 +38,7 @@ const createListPointTemplate = (point) => {
     offers,
     isFavorite
   } = point;
+  console.log('point =', point);
 
   return `
     <li class="trip-events__item">
