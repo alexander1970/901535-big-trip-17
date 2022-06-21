@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import AbstractView from '../framework/view/abstract-view.js';
 import { capitalizeFirstLetter } from '../utils/common.js'; // ?
-import { getDuration } from '../utils/point.js';
+import { calcDuration, getDuration } from '../utils/point.js';
 
 const getOfferTemplate = (offer) => {
   const {title, cost} = offer;
@@ -15,18 +15,11 @@ const getOfferTemplate = (offer) => {
   `;
 };
 
-const generateOffers = (offers) => {
-  const offersList = offers.reduce((acc, element) => {
-    acc += getOfferTemplate(element);
-    return  acc;
-  }, '');
-
-  return `
+const renderOffers = (offers) => `
     <ul class="event__selected-offers">
-      ${offersList}
+      ${offers.length ? '' : offers.map(getOfferTemplate).join(' ')}
     </ul>
   `;
-};
 
 const createListPointTemplate = (point) => {
   const {
@@ -38,7 +31,8 @@ const createListPointTemplate = (point) => {
     offers,
     isFavorite
   } = point;
-  console.log('point =', point);
+  // console.log('offers =', offers);
+  const duration = calcDuration(point);
 
   return `
     <li class="trip-events__item">
@@ -52,19 +46,23 @@ const createListPointTemplate = (point) => {
         <h3 class="event__title">${capitalizeFirstLetter(type)} ${destination}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${dayjs(dateFrom).format('YYYY-MM-DD HH:mm')}">${dayjs(dateFrom).format('HH:mm')}</time>
+            <time class="event__start-time" datetime="${dayjs(dateFrom).format('YYYY-MM-DDTHH:mm')}">
+              ${dayjs(dateFrom).format('HH:mm')}
+            </time>
             &mdash;
-            <time class="event__end-time" datetime="${dayjs(dateTo).format('YYYY-MM-DD HH:mm')}">${dayjs(dateTo).format('HH:mm')}</time>
+            <time class="event__end-time" datetime="${dayjs(dateTo).format('YYYY-MM-DDTHH:mm')}">
+              ${dayjs(dateTo).format('HH:mm')}
+            </time>
           </p>
           <p class="event__duration">
-            ${getDuration(dateFrom, dateTo)}
+            ${getDuration(duration)}
           </p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
-        ${generateOffers(offers)}
+        ${renderOffers(offers)}
         <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">

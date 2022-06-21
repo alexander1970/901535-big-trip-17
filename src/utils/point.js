@@ -7,8 +7,8 @@ const DAY_MINUT = DAY_HOURS * HOUR_MINUT;
 
 const setPointID = () => nanoid();
 
-const getDuration = (begin, end) => {
-  const durationInMinutes = dayjs(end).diff(begin, 'minutes');
+const getDuration = (value) => {
+  const durationInMinutes = value;
   const durationInHours = Math.floor(durationInMinutes / HOUR_MINUT);
   const durationInDays = Math.floor(durationInHours / DAY_HOURS);
 
