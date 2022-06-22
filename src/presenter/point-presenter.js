@@ -30,7 +30,7 @@ export default class PointPresenter {
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 
-    this.#pointComponent = new NewTripListPointTemplateView(this.#arrPoints);
+    this.#pointComponent = new NewTripListPointTemplateView(this.#arrPoints, this.#offers);
     this.#pointEditComponent = new NewEditPointTemplateView(this.#arrPoints, this.#destinations, this.#offers);
 
     this.#pointComponent.setPointRollupButtonClickHandler(this.#handlePointRollupClick);

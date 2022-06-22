@@ -4,36 +4,35 @@ import { capitalizeFirstLetter } from '../utils/common.js'; // ?
 import { calcDuration, getDuration } from '../utils/point.js';
 
 const getOfferTemplate = (offer) => {
-  const {title, cost} = offer;
+  const {title, price} = offer;
 
   return `
     <li class="event__offer">
       <span class="event__offer-title">${title}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${cost}</span>
+      <span class="event__offer-price">${price}</span>
     </li>
   `;
 };
 
-const renderOffers = (offers) => `
+const renderOffers = (offersOfSelectedType) => `
     <ul class="event__selected-offers">
-      ${offers.length ? '' : offers.map(getOfferTemplate).join(' ')}
+      ${offersOfSelectedType.map((offer) => getOfferTemplate(offer)).join('')}
     </ul>
   `;
 
-const createListPointTemplate = (point) => {
+const createListPointTemplate = (point, typedOffers) => {
   const {
     type,
     destination,
     dateFrom,
     dateTo,
     basePrice,
-    offers,
     isFavorite
   } = point;
-  console.log('offers =', offers);
 
   const duration = calcDuration(point);
+  const selectedTypeOffers = typedOffers.find((item) => item.type === type).offers;
 
   return `
     <li class="trip-events__item">
@@ -63,7 +62,7 @@ const createListPointTemplate = (point) => {
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
-        ${renderOffers(offers)}
+        ${renderOffers(selectedTypeOffers)}
         <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -79,13 +78,16 @@ const createListPointTemplate = (point) => {
 };
 
 export default class NewTripListPointTemplateView extends AbstractStatefulView {
-  constructor(point) {
+  #offers = null;
+
+  constructor(point, offers) {
     super();
     this._state = point;
+    this.#offers = offers;
   }
 
   get template() {
-    return createListPointTemplate(this._state);
+    return createListPointTemplate(this._state, this.#offers);
   }
 
   setPointRollupButtonClickHandler = (callback) => {
