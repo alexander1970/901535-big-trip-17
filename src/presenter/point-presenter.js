@@ -13,6 +13,8 @@ export default class PointPresenter {
   #mode = Mode.DEFAULT;
 
   #arrPoints = [];
+  #destinations = [];
+  #offers = [];
 
   constructor(pointsContainer, changeData, changeMode) {
     this.#pointsContainer = pointsContainer;
@@ -22,12 +24,14 @@ export default class PointPresenter {
 
   init = (arrPoints, destinations, offers) => {
     this.#arrPoints = arrPoints;
+    this.#destinations = destinations;
+    this.#offers = offers;
 
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 
     this.#pointComponent = new NewTripListPointTemplateView(this.#arrPoints);
-    this.#pointEditComponent = new NewEditPointTemplateView(this.#arrPoints, destinations, offers);
+    this.#pointEditComponent = new NewEditPointTemplateView(this.#arrPoints, this.#destinations, this.#offers);
 
     this.#pointComponent.setPointRollupButtonClickHandler(this.#handlePointRollupClick);
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);

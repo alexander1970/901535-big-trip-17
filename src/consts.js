@@ -1,3 +1,16 @@
+const TYPES = [
+  'taxi',
+  'bus',
+  'train',
+  'ship',
+  'transport',
+  'drive',
+  'flight',
+  'check-in',
+  'sightseeing',
+  'restaurant',
+];
+
 const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
@@ -42,6 +55,7 @@ const BLANK_POINT = {
 };
 
 export {
+  TYPES,
   FilterType,
   SortType,
   Mode,

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { capitalizeFirstLetter } from '../utils/common.js'; // ?
 import { calcDuration, getDuration } from '../utils/point.js';
 
@@ -31,7 +31,8 @@ const createListPointTemplate = (point) => {
     offers,
     isFavorite
   } = point;
-  // console.log('offers =', offers);
+  console.log('offers =', offers);
+
   const duration = calcDuration(point);
 
   return `
@@ -77,16 +78,14 @@ const createListPointTemplate = (point) => {
   `;
 };
 
-export default class NewTripListPointTemplateView extends AbstractView {
-  #point = null;
-
+export default class NewTripListPointTemplateView extends AbstractStatefulView {
   constructor(point) {
     super();
-    this.#point = point;
+    this._state = point;
   }
 
   get template() {
-    return createListPointTemplate(this.#point);
+    return createListPointTemplate(this._state);
   }
 
   setPointRollupButtonClickHandler = (callback) => {

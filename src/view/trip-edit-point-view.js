@@ -1,9 +1,8 @@
 import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { TYPES } from '../mock/consts.js';
+import { TYPES } from '../consts.js';
 import { capitalizeFirstLetter } from '../utils/common.js';  // ?
-import { setPointID } from '../utils/point.js';
 
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -31,17 +30,15 @@ const renderDestination = (destinationDescription, photos) => (
 const renderDestinationOption = (optionCity) => `<option value="${optionCity}"></option>`;
 
 const getClassNamePart = (str) => {
-  // console.log('str=', str);
   const splitStr = str.split('');
 
   return splitStr[splitStr.length - 1];
 };
 
 const getOfferTemplate = (offer, isChecked, isDisabled) => {
-  const {title, cost} = offer;
+  const {id, title, price} = offer;
 
   const classNamePart = getClassNamePart(title);
-  const id = setPointID();
 
   return `
     <div class="event__offer-selector">
@@ -56,18 +53,18 @@ const getOfferTemplate = (offer, isChecked, isDisabled) => {
       <label class="event__offer-label" for="event-offer-${classNamePart}-${id}">
         <span class="event__offer-title">${title}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${cost}</span>
+        <span class="event__offer-price">${price}</span>
       </label>
     </div>
   `;
 };
 
-const renderOffers = (offers, offersOfSelectedType, haveOffers) => !offersOfSelectedType.length ? '' : `
+const renderOffers = (offers, offersOfSelectedType, isDisabled) => !offersOfSelectedType.length ? '' : `
   <section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
     <div class="event__available-offers">
       ${offersOfSelectedType.map((offer) => getOfferTemplate(offer,
-    Boolean(offers.find((current) => current.title === offer.title)), haveOffers)).join('')}
+    Boolean(offers.find((current) => current.title === offer.title)), isDisabled)).join('')}
     </div>
   </section>
 `;

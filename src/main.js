@@ -19,7 +19,7 @@ const tripEventsSection = pageMain.querySelector('.trip-events');
 const apiServer = new PointsApiService(END_POINT, AUTHORIZATION);
 const pointModel = new PointModel(apiServer);
 const filterModel = new FilterModel();
-const tripPresenter = new TripPresenter(tripEventsSection, pointModel, filterModel, apiServer);
+const tripPresenter = new TripPresenter(tripEventsSection, pointModel, filterModel);
 const filterPresenter = new FilterPresenter(siteControls, filterModel, pointModel);
 const newPointButtonComponent = new NewPointButtonView();
 
