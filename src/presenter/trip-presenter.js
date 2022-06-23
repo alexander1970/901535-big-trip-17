@@ -33,9 +33,6 @@ export default class TripPresenter {
     // this.#apiServer = apiServer;
 
     this.#pointAddPresenter = new PointAddPresenter(this.#pointList, this.#handleViewAction);
-
-    this.#pointsModel.addObserver(this.#handleModelPoint);
-    this.#filterModel.addObserver(this.#handleModelPoint);
   }
 
   get points() {
@@ -56,7 +53,17 @@ export default class TripPresenter {
   }
 
   init = () => {
+    this.#pointsModel.addObserver(this.#handleModelPoint);
+    this.#filterModel.addObserver(this.#handleModelPoint);
+
     this.#renderBoard();
+  };
+
+  destroy = () => {
+    this.#pointsModel.addObserver(this.#handleModelPoint);
+    this.#filterModel.addObserver(this.#handleModelPoint);
+
+    this.#clearBoard({resetSortType: true});
   };
 
   createPoint = () => {
@@ -152,6 +159,11 @@ export default class TripPresenter {
 
   #handleModelPoint = (updateType, data) => {
     switch (updateType) {
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderBoard();
+        break;
       case UpdateType.PATCH:
         this.#pointPresenter.get(data.id).init(data);
         break;
@@ -161,11 +173,6 @@ export default class TripPresenter {
         break;
       case UpdateType.MAJOR:
         this.#clearBoard({resetSortType: true});
-        this.#renderBoard();
-        break;
-      case UpdateType.INIT:
-        this.#isLoading = false;
-        remove(this.#loadingComponent);
         this.#renderBoard();
         break;
     }
