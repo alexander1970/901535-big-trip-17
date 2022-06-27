@@ -2,6 +2,7 @@ import ApiService from './framework/api-service';
 
 const Method = {
   GET: 'GET',
+  POST: 'POST',
   PUT: 'PUT',
 };
 
@@ -20,6 +21,10 @@ export default class PointsApiService extends ApiService {
     return this._load({url: 'offers'})
       .then(ApiService.parseResponse);
   }
+
+  addPoint = (point) => {
+
+  };
 
   updatePoint = async (point) => {
     const response = await this._load({
