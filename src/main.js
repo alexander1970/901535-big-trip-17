@@ -1,6 +1,4 @@
-import { remove, render } from './framework/render.js';
-import { isOnline } from './utils/common.js';
-import { toast } from './utils/toast.js';
+import { render } from './framework/render.js';
 import TripPresenter from './presenter/trip-presenter.js';
 import PointModel from './model/point-model.js';
 import NewPointButtonView from './view/new-point-button.js';
@@ -19,8 +17,7 @@ const tripInfo = tripMain.querySelector('.trip-info');
 const siteControls = pageHeader.querySelector('.trip-controls__filters');
 const tripEventsSection = pageMain.querySelector('.trip-events');
 
-const apiServer = new PointsApiService(END_POINT, AUTHORIZATION);
-const pointModel = new PointModel(apiServer);
+const pointModel = new PointModel(new PointsApiService(END_POINT, AUTHORIZATION));
 const filterModel = new FilterModel();
 const addNewPointButton = new NewPointButtonView();
 
@@ -28,25 +25,20 @@ const tripPresenter = new TripPresenter(tripEventsSection, pointModel, filterMod
 const filterPresenter = new FilterPresenter(siteControls, filterModel, pointModel);
 const infoPresenter = new InfoPresenter(tripInfo, pointModel);
 
-let statsComponent = null;
+const handleNewTaskFormClose = () => {
+  addNewPointButton.element.disabled = false;
+};
 
-render(addNewPointButton, tripMain);
+const handleNewPointButtonClick = () => {
+  tripPresenter.createPoint(handleNewTaskFormClose);
+  addNewPointButton.element.disabled = true;
+};
 
 tripPresenter.init();
 filterPresenter.init();
 infoPresenter.init();
-// pointModel.init();
-
-addNewPointButton.disabled = true;
-
-addNewPointButton.element.addEventListener('click', (evt) => {
-  if (!isOnline()) {
-    toast('You cannot add a new event offline');
-    return;
-  }
-
-  evt.preventDefault();
-  remove(statsComponent);
-  tripPresenter.destroy();
-  tripPresenter.init();
-});
+pointModel.init()
+  .finally(() => {
+    render(addNewPointButton, tripMain);
+    addNewPointButton.setClickHandler(handleNewPointButtonClick);
+  });

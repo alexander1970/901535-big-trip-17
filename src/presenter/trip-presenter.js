@@ -13,7 +13,6 @@ export default class TripPresenter {
   #listContainer = null;
   #pointsModel = null;
   #filterModel = null;
-  // #apiServer = new Map();
 
   #pointSort = null;
 
@@ -30,7 +29,6 @@ export default class TripPresenter {
     this.#listContainer = listContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
-    // this.#apiServer = apiServer;
 
     this.#pointAddPresenter = new PointAddPresenter(this.#pointList, this.#handleViewAction);
   }
