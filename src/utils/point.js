@@ -1,11 +1,8 @@
 import dayjs from 'dayjs';
-import { nanoid } from 'nanoid';
 
 const HOUR_MINUT = 60;
 const DAY_HOURS = 24;
 const DAY_MINUT = DAY_HOURS * HOUR_MINUT;
-
-const setPointID = () => nanoid();
 
 const getDuration = (value) => {
   const durationInMinutes = value;
@@ -26,4 +23,4 @@ const getDuration = (value) => {
 
 const calcDuration = (event) => dayjs(event.dateTo).diff(event.dateFrom, 'minutes');
 
-export { getDuration, calcDuration, setPointID };
+export { getDuration, calcDuration };

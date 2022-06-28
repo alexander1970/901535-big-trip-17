@@ -1,6 +1,5 @@
 import { BLANK_POINT, UpdateType, UserAction } from '../consts';
 import { remove, render } from '../framework/render';
-import { setPointID } from '../utils/point';
 import NewEditPointTemplateView from '../view/trip-edit-point-view';
 
 export default class PointAddPresenter {
@@ -43,12 +42,7 @@ export default class PointAddPresenter {
     this.#changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      Object.assign(
-        {
-          id: setPointID()
-        },
-        point
-      )
+      point,
     );
     this.destroy();
   };

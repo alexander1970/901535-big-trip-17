@@ -345,9 +345,9 @@ export default class NewEditPointTemplateView extends AbstractStatefulView {
   static parseStateToPoint = (state) => {
     const point = Object.assign({}, state);
 
-    delete point.onSaving;
-    delete point.onDeleting;
-    delete point.isDisabled;
+    delete state.onSaving;
+    delete state.onDeleting;
+    delete state.isDisabled;
 
     return point;
   };
